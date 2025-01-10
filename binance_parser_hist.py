@@ -120,25 +120,33 @@ def binance_parse_candles_all_symbols(transaction_types_apis, symbols_names, sta
         if int_year == end_time_timestamp.year:
             end_timestamp_req = end_time_timestamp
 
-        print(f"Сейчас собираю {candle_save_pth+f"{year}.csv"}...")
+        print(f"Сейчас собираю {candle_save_pth}{year}.csv...")
         request_candles(API_path,
                         candle_save_pth+f"{year}.csv", 
                         symb, 
                         '5m', 
                         datetime.strftime(start_timestamp_req, format='%d/%m/%Y, %H:%M:%S'), 
                         datetime.strftime(end_timestamp_req, format='%d/%m/%Y, %H:%M:%S'))
-        print(f"Собрал {candle_save_pth+f"{year}.csv"}!")
+        print(f"Собрал {candle_save_pth}{year}.csv!")
 
         #Операции с датафреймом
-        print(f"Проверка {candle_save_pth+f"{year}.csv"} на выборсы и пропуски...")
+        print(f"Проверка {candle_save_pth}{year}.csv на выборсы и пропуски...")
         csv_dat = pd.read_csv(candle_save_pth+f"{year}.csv")
         csv_dat = csv_dat.dropna(axis=0)
         print(f"Найдено пропусков: {csv_dat.isna().sum(axis=1).sum()}")
         csv_dat.to_csv(candle_save_pth+f"{year}.csv")
-        print(f"Успешно сохранён {candle_save_pth+f"{year}.csv"}")
+        print(f"Успешно сохранён {candle_save_pth}{year}.csv")
         print('\n')
 
 BINANCE_ROOT_PATH = 'https://www.binance.com'
 SPOT_API_PATH = BINANCE_ROOT_PATH + '/api/v3'
 FUT_API_PATH = BINANCE_ROOT_PATH + '/fapi/v1'
-binance_parse_candles_all_symbols([SPOT_API_PATH, FUT_API_PATH], ['BTCUSDT'], '1.2.2024', '1.3.2024', 'Vallet_Courses_Loader/data', '5m')
+
+if __name__ == "__main__":
+    binance_parse_candles_all_symbols(
+        [SPOT_API_PATH, FUT_API_PATH],
+        ['BTCUSDT'],
+        '1.2.2024',
+        '1.3.2024',
+        'Vallet_Courses_Loader/data',
+        '5m')

@@ -1,17 +1,5 @@
 import numpy as np
 
-def neutralize(alpha):
-  return alpha.subtract(
-    alpha.mean(axis=1),
-    axis=0
-  )
-def scale(alpha):
-  return alpha.div(
-    alpha
-    .abs()
-    .sum(axis=1),
-    axis=0
-  )
 def PnL(x):
     return x.sum().sum()
 def Sharpe(x):
