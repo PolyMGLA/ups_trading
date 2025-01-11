@@ -28,7 +28,7 @@ def parse_url(h):
     soup = BeautifulSoup(req.text, "lxml")
     # print(soup.find_all("h1"))
     section = soup.find("div", { "class": "z-2 flex-1 min-w-0" })
-    caption = section.find("h1", { "class": "font-canela font-black text-neutral-800" }).getText()
+    caption = section.find("h1").getText()
     date = soup.find("span", { "class": "font-akzidenz-grotesk scene:font-itc-avant-garde-gothic-pro scene:font-light font-normal text-sm/4.5 md:text-base/5 xl:text-lg/5 scene:text-sm whitespace-nowrap" }).find("time").getText()
     #date = date.replace("Updated", "")[1:13].replace(",", "")
     text = ""

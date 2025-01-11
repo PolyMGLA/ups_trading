@@ -28,12 +28,18 @@ def parse_url(h):
     section = soup.find("div", { "class": "pt-8 grid grid-cols-4 gap-2 md:grid-cols-8 md:gap-4 lg:grid-cols-12 xl:grid-cols-16 items-stretch" })
     caption = soup.find("h1", { "class": "text-headline-lg" }).getText()
     date = soup.find("div", { "class": "Noto_Sans_xs_Sans-400-xs flex gap-4 text-charcoal-600 flex-col md:flex-row" }).getText()
+    tm = time.strftime("%H:%M",
+                       time.strptime(
+                           date[date.find(":") - 2:date.find(":") + 5]
+                           .replace("p", "PM").replace("a", "AM").strip(), "%I:%M\u202f%p"))
+
+    # print(tm)
     date = date.replace("Updated", "")[1:13].replace(",", "")
     text = ""
     for el in section.find_all("p"):
         text += el.getText() + "\n"
     parsed[h] = [caption, date, text]
-    return { h: [caption, date, text] }
+    return { h: [caption, date + " " + tm, text] }
 
 
 def CoinDeskParser(FILENAME, NUM):
