@@ -1,7 +1,7 @@
 import datetime
 from dateutil.parser import parse as parse_date
 import itertools
-
+import time
 import os
 import sys
 import numpy as np
@@ -9,6 +9,7 @@ import pandas as pd
 import requests
 import json
 import pytz
+from tqdm import tqdm
 import pathlib
 
 from datetime import timedelta,datetime
@@ -114,6 +115,7 @@ def request_candles(API_PATH, csv_save_pth, symbol, interval, startTime, endTime
         candles[f] = candles[f].apply(lambda x: datetime.fromtimestamp(1e-3 * x, tz=utc))
 
     candles.to_csv(csv_save_pth)
+    time.sleep()
     return candles
 
 
@@ -169,4 +171,4 @@ def process_tick_joblib(tick_symbol):
         '1.1.2022',
         '1.10.2025',
     )
-Parallel(n_jobs=-1)(delayed(process_tick_joblib)(tick_symbol) for tick_symbol in tick)
+Parallel(n_jobs=10)(delayed(process_tick_joblib)(tick_symbol) for tick_symbol in tick)
