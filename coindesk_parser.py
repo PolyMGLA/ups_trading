@@ -4,7 +4,7 @@ import json
 import os
 import os.path
 
-FILENAME_DEF = "news.json"
+FILENAME_DEF = "coindesk_news.json"
 
 def CoinDeskParser(FILENAME):
     """
@@ -42,6 +42,6 @@ def CoinDeskParser(FILENAME):
     with open(FILENAME, "w") as f: json.dump(parsed, f)
 
 if __name__ == "__main__":
-    if not os.path.exists(FILENAME):
-        with open(FILENAME, "w") as f: f.write("{}")
+    if not os.path.exists(FILENAME_DEF):
+        with open(FILENAME_DEF, "w") as f: f.write("{}")
     CoinDeskParser(FILENAME=FILENAME_DEF)

@@ -100,9 +100,9 @@ def neutralize(alpha):
     )
 
 def scale(alpha):
-  return alpha.div(
-    alpha
-    .abs()
-    .sum(axis=1),
-    axis=0
-  )
+    return alpha.div(
+        alpha
+        .abs()
+        .sum(axis=1),
+        axis=0
+    )
