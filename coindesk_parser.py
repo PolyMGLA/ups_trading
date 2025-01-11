@@ -27,17 +27,21 @@ def CoinDeskParser(FILENAME, NUM):
 
     #r = requests.get(COINDESK_ADDR + "/latest-crypto-news")
     driver = webdriver.Firefox()
-    driver.set_page_load_timeout(1)
+    driver.set_page_load_timeout(5)
     try:
         driver.get(COINDESK_ADDR + "/latest-crypto-news")
     except selenium.common.exceptions.TimeoutException as e:
         pass
+    btn = None
     for el in driver.find_elements(By.TAG_NAME, "button")[::-1]:
         if "More stories" in el.get_attribute("outerHTML"):
             btn = el
             break
-    for i in range(NUM):
-        driver.execute_script("arguments[0].click();", btn)
+    try:
+        for i in range(NUM):
+            driver.execute_script("arguments[0].click();", btn)
+    except KeyboardInterrupt:
+        print("interrupted on i =", i)
     
     soup = BeautifulSoup(driver.page_source, "lxml")
     driver.close()
