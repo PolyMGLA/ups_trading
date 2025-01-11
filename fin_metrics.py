@@ -1,4 +1,6 @@
+
 import numpy as np
+import pandas as pd
 
 def PnL(x):
     '''x here it is alpha*returns'''
@@ -20,3 +22,11 @@ def Turnovers_distribution(alpha):
     return np.array(turnovers)
 def Get_metrics(x,alpha):
     return {"Pnl": PnL(x), "Sharpe": Sharpe(x), "Drawdown": Drawdown(x), "Turnover": Turnover(alpha)}
+
+def backtest(x: pd.DataFrame, alpha: pd.DataFrame) -> pd.DataFrame:
+    '''
+    func returns Pnl, Sharpe, Drawdown, Turnover and cumsum plot by alpha&returns
+    '''
+    res = (np.matrix(alpha) * x).sum(axis = 1).cumsum()
+    res.plot()
+    return pd.DataFrame(Get_metrics(x, alpha).items(), columns=['metric', 'value'])
