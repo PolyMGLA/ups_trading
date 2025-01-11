@@ -1,7 +1,7 @@
 import numpy as np
 
 def PnL(x):
-    return x.sum().sum()
+    return x.sum(axis=1).sum()
 def Sharpe(x):
     return PnL(x) / x.sum(axis=1).std()
 def Drawdown(x):
