@@ -31,24 +31,15 @@ def CoinDeskParser(FILENAME, NUM):
     try:
         driver.get(COINDESK_ADDR + "/latest-crypto-news")
     except selenium.common.exceptions.TimeoutException as e:
-        #print(e)
         pass
-    #print(BeautifulSoup(driver.page_source, "lxml"))
     for el in driver.find_elements(By.TAG_NAME, "button")[::-1]:
         if "More stories" in el.get_attribute("outerHTML"):
             btn = el
             break
-    #print([el.get_attribute("outerHTML") for el in driver.find_elements(By.TAG_NAME, "button")])
     for i in range(NUM):
         driver.execute_script("arguments[0].click();", btn)
-        for el in driver.find_elements(By.TAG_NAME, "button")[::-1]:
-            if "More stories" in el.get_attribute("outerHTML"):
-                btn = el
-                break
-        #driver.find_element(By.CSS_SELECTOR,
-        #                    "bg-white hover:opacity-80 cursor-pointer border border-color-yellow-900 border-solid rounded-lg mb-8 text-color-charcoal-700 Noto_Sans_sm_Sans-600-sm py-1 px-4 h-10 flex items-center justify-center disabled:cursor-default").find_element(By.TAG_NAME, "button").click()
+    
     soup = BeautifulSoup(driver.page_source, "lxml")
-    # print(soup)
     hrefs = []
     for el in soup.find_all("div", { "class": "flex gap-4" }):
         hrefs.append(COINDESK_ADDR + el.find("a", { "class": "text-color-charcoal-900 mb-4 hover:underline" }, href=True)["href"])
