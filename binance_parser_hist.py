@@ -124,7 +124,7 @@ def binance_parse_candles_all_symbols(transaction_types_apis, symbols_names, sta
         request_candles(API_path,
                         candle_save_pth+f"{year}.csv", 
                         symb, 
-                        '5m', 
+                        interval, 
                         datetime.strftime(start_timestamp_req, format='%d/%m/%Y, %H:%M:%S'), 
                         datetime.strftime(end_timestamp_req, format='%d/%m/%Y, %H:%M:%S'))
         print(f"Собрал {candle_save_pth}{year}.csv!")
