@@ -27,7 +27,7 @@ def CoinDeskParser(FILENAME, NUM):
 
     #r = requests.get(COINDESK_ADDR + "/latest-crypto-news")
     driver = webdriver.Firefox()
-    driver.set_page_load_timeout(10)
+    driver.set_page_load_timeout(1)
     try:
         driver.get(COINDESK_ADDR + "/latest-crypto-news")
     except selenium.common.exceptions.TimeoutException as e:
@@ -40,12 +40,12 @@ def CoinDeskParser(FILENAME, NUM):
         driver.execute_script("arguments[0].click();", btn)
     
     soup = BeautifulSoup(driver.page_source, "lxml")
+    driver.close()
     hrefs = []
     for el in soup.find_all("div", { "class": "flex gap-4" }):
         hrefs.append(COINDESK_ADDR + el.find("a", { "class": "text-color-charcoal-900 mb-4 hover:underline" }, href=True)["href"])
     
     for h in hrefs:
-        # if len(parsed) > 0 and h == list(parsed.keys())[0]: break
         if h in parsed: 
             print("saved:", h)
             continue
