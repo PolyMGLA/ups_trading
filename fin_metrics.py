@@ -22,6 +22,7 @@ class FinCalculations:
         '''
         return (alpha * returns).sum(axis=1)
     
+    @staticmethod
     def pnl(
         alpha: pd.DataFrame,
         returns: pd.DataFrame
@@ -71,6 +72,7 @@ class FinCalculations:
             FinCalculations.pnl(alpha, returns).cummax() + 1
         )
     
+    @staticmethod
     def maxDrawdown(
         alpha: pd.DataFrame,
         returns: pd.DataFrame
@@ -85,6 +87,7 @@ class FinCalculations:
         '''
         return FinCalculations.drawdown_vec(alpha, returns).max()
 
+    @staticmethod
     def turnover_vec(
         alpha: pd.DataFrame
     ) -> pd.Series:
@@ -97,6 +100,7 @@ class FinCalculations:
         '''
         return (alpha - alpha.shift()).abs().sum(axis=1)
     
+    @staticmethod
     def turnover(
         alpha: pd.DataFrame
     ) -> float:
@@ -107,7 +111,39 @@ class FinCalculations:
         :return: Среднее изменение (turnover) весов стратегии.
         '''
         return FinCalculations.turnover_vec(alpha).mean()
+    
+    @staticmethod
+    def decay(
+        alpha: pd.DataFrame,
+        win: int
+    ) -> pd.DataFrame:
+        '''
+        Метод для расчета decay с экспоненциальным сглаживанием.
+        
+        :param alpha: Датафрейм с весами альфа-стратегии.
+        :param win: Параметр окна для экспоненциального сглаживания.
+        :return: Альфа после сглаживания.
+        '''
 
+        return alpha.ewm(span=win).mean() 
+    
+    @staticmethod
+    def profit_margin(
+        alpha: pd.DataFrame,
+        returns: pd.DataFrame
+    ) -> float:
+        '''
+        Метод для расчета метрики Profit Margin.
+
+        :param alpha: Датафрейм с весами альфа-стратегии.
+        :param returns: Датафрейм с доходностью активов.
+        :return: Значение Profit Margin.
+        '''
+        pnl = FinCalculations.pnl_vec(alpha, returns)
+        tvr = FinCalculations.turnover_vec(alpha)
+        return pnl.mean() / tvr.mean() if tvr.mean() != 0 else np.nan
+
+    @staticmethod
     def metrics(
         alpha: pd.DataFrame,
         returns: pd.DataFrame
