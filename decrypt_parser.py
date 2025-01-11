@@ -33,6 +33,7 @@ def parse_url(h):
     #date = date.replace("Updated", "")[1:13].replace(",", "")
     text = ""
     for el in section.find_all("p"):
+        if el == None: continue
         text += el.getText() + "\n"
     parsed[h] = [caption, date, text]
     return { h: [caption, date, text] }
