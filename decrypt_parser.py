@@ -18,25 +18,29 @@ NUM_DEF = 4
 N_CORES = 4
 
 def parse_url(h):
-    global parsed
-    if h in parsed:
-        # print("skipping:", h)
+    try:
+        global parsed
+        if h in parsed:
+            # print("skipping:", h)
+            return { }
+        # print(h)
+        time.sleep(.25)
+        req = requests.get(h)
+        soup = BeautifulSoup(req.text, "lxml")
+        # print(soup.find_all("h1"))
+        section = soup.find("div", { "class": "z-2 flex-1 min-w-0" })
+        caption = section.find("h1").getText()
+        date = soup.find("span", { "class": "font-akzidenz-grotesk scene:font-itc-avant-garde-gothic-pro scene:font-light font-normal text-sm/4.5 md:text-base/5 xl:text-lg/5 scene:text-sm whitespace-nowrap" }).find("time").getText()
+        #date = date.replace("Updated", "")[1:13].replace(",", "")
+        text = ""
+        for el in section.find_all("p"):
+            if el == None: continue
+            text += el.getText() + "\n"
+        parsed[h] = [caption, date, text]
+        return { h: [caption, date, text] }
+    except Exception as e:
+        print(e)
         return { }
-    # print(h)
-    time.sleep(.25)
-    req = requests.get(h)
-    soup = BeautifulSoup(req.text, "lxml")
-    # print(soup.find_all("h1"))
-    section = soup.find("div", { "class": "z-2 flex-1 min-w-0" })
-    caption = section.find("h1").getText()
-    date = soup.find("span", { "class": "font-akzidenz-grotesk scene:font-itc-avant-garde-gothic-pro scene:font-light font-normal text-sm/4.5 md:text-base/5 xl:text-lg/5 scene:text-sm whitespace-nowrap" }).find("time").getText()
-    #date = date.replace("Updated", "")[1:13].replace(",", "")
-    text = ""
-    for el in section.find_all("p"):
-        if el == None: continue
-        text += el.getText() + "\n"
-    parsed[h] = [caption, date, text]
-    return { h: [caption, date, text] }
 
 
 def DecryptParser(FILENAME, NUM):
@@ -60,7 +64,7 @@ def DecryptParser(FILENAME, NUM):
 
     #r = requests.get(COINDESK_ADDR + "/latest-crypto-news")
     driver = webdriver.Firefox()
-    driver.set_page_load_timeout(5)
+    driver.set_page_load_timeout(10)
     try:
         driver.get(COINDESK_ADDR + "/news")
     except selenium.common.exceptions.TimeoutException as e:

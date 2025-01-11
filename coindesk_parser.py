@@ -18,29 +18,33 @@ NUM_DEF = 4
 N_CORES = 4
 
 def parse_url(h):
-    global parsed
-    if h in parsed:
-        # print("skipping:", h)
-        return { }
-    time.sleep(.25)
-    req = requests.get(h)
-    soup = BeautifulSoup(req.text, "lxml")
-    section = soup.find("div", { "class": "pt-8 grid grid-cols-4 gap-2 md:grid-cols-8 md:gap-4 lg:grid-cols-12 xl:grid-cols-16 items-stretch" })
-    caption = soup.find("h1", { "class": "text-headline-lg" }).getText()
-    date = soup.find("div", { "class": "Noto_Sans_xs_Sans-400-xs flex gap-4 text-charcoal-600 flex-col md:flex-row" }).getText()
-    tm = time.strftime("%H:%M",
-                       time.strptime(
-                           date[date.find(":") - 2:date.find(":") + 5]
-                           .replace("p", "PM").replace("a", "AM").strip(), "%I:%M\u202f%p"))
+    try:
+        global parsed
+        if h in parsed:
+            # print("skipping:", h)
+            return { }
+        time.sleep(.25)
+        req = requests.get(h)
+        soup = BeautifulSoup(req.text, "lxml")
+        section = soup.find("div", { "class": "pt-8 grid grid-cols-4 gap-2 md:grid-cols-8 md:gap-4 lg:grid-cols-12 xl:grid-cols-16 items-stretch" })
+        caption = soup.find("h1", { "class": "text-headline-lg" }).getText()
+        date = soup.find("div", { "class": "Noto_Sans_xs_Sans-400-xs flex gap-4 text-charcoal-600 flex-col md:flex-row" }).getText()
+        tm = time.strftime("%H:%M",
+                        time.strptime(
+                            date[date.find(":") - 2:date.find(":") + 5]
+                            .replace("p", "PM").replace("a", "AM").strip(), "%I:%M\u202f%p"))
 
-    # print(tm)
-    date = date.replace("Updated", "")[1:13].replace(",", "")
-    text = ""
-    for el in section.find_all("p"):
-        if el == None: continue
-        text += el.getText() + "\n"
-    parsed[h] = [caption, date, text]
-    return { h: [caption, date + " " + tm, text] }
+        # print(tm)
+        date = date.replace("Updated", "")[1:13].replace(",", "")
+        text = ""
+        for el in section.find_all("p"):
+            if el == None: continue
+            text += el.getText() + "\n"
+        parsed[h] = [caption, date, text]
+        return { h: [caption, date + " " + tm, text] }
+    except Exception as e:
+        print(e)
+        return { }
 
 
 def CoinDeskParser(FILENAME, NUM):
@@ -64,7 +68,7 @@ def CoinDeskParser(FILENAME, NUM):
 
     #r = requests.get(COINDESK_ADDR + "/latest-crypto-news")
     driver = webdriver.Firefox()
-    driver.set_page_load_timeout(5)
+    driver.set_page_load_timeout(10)
     try:
         driver.get(COINDESK_ADDR + "/latest-crypto-news")
     except selenium.common.exceptions.TimeoutException as e:
