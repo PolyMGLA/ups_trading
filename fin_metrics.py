@@ -1,3 +1,4 @@
+
 import numpy as np
 import pandas as pd
 
@@ -87,3 +88,11 @@ class FinCalculations:
         metrics_dict["Max Drawdown"] = FinCalculations.maxDrawdown(alpha, returns)
         metrics_dict["Turnover"] = FinCalculations.turnover(alpha)
         return pd.DataFrame(metrics_dict, index=[0])
+    
+    def backtest(self, x: pd.DataFrame, alpha: pd.DataFrame) -> pd.DataFrame:
+        '''
+        func returns Pnl, Sharpe, Drawdown, Turnover and cumsum plot by alpha&returns
+        '''
+        res = (np.matrix(alpha) * x).sum(axis = 1).cumsum()
+        res.plot()
+        return self.metrics(x, alpha)
