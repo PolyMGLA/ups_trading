@@ -75,9 +75,12 @@ def DecryptParser(FILENAME, NUM):
             btn = el
             break
     # print("press q to break")
-    for i in tqdm.tqdm(range(NUM)):
-        driver.execute_script("arguments[0].click();", btn)
-        time.sleep(.65)
+    try:
+        for i in tqdm.tqdm(range(NUM)):
+            driver.execute_script("arguments[0].click();", btn)
+            time.sleep(.65)
+    except Exception as e:
+        print(e)
     
     # print("interrupted on i =", i)
     
