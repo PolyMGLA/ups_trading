@@ -15,7 +15,7 @@ from selenium.webdriver.common.by import By
 
 FILENAME_DEF = "decrypt_news.json"
 NUM_DEF = 4
-N_CORES = 4
+N_CORES = 12
 
 def parse_url(h):
     try:
@@ -64,7 +64,7 @@ def DecryptParser(FILENAME, NUM):
 
     #r = requests.get(COINDESK_ADDR + "/latest-crypto-news")
     driver = webdriver.Firefox()
-    driver.set_page_load_timeout(10)
+    driver.set_page_load_timeout(30)
     try:
         driver.get(COINDESK_ADDR + "/news")
     except selenium.common.exceptions.TimeoutException as e:

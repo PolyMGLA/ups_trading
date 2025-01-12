@@ -15,7 +15,7 @@ from selenium.webdriver.common.by import By
 
 FILENAME_DEF = "coindesk_news.json"
 NUM_DEF = 4
-N_CORES = 4
+N_CORES = 12
 
 def parse_url(h):
     try:
