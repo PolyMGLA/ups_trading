@@ -94,14 +94,19 @@ def CoinDeskParser(FILENAME, NUM):
     for el in soup.find_all("div", { "class": "flex gap-4" }):
         hrefs.append(COINDESK_ADDR + el.find("a", { "class": "text-color-charcoal-900 mb-4 hover:underline" }, href=True)["href"])
     print("parsing..")
-    
-    data = Parallel(n_jobs=N_CORES, verbose=10)(delayed(parse_url)(h) for h in tqdm.tqdm(hrefs))
-    # print(data)
-    for el in data:
-        if el == { }: continue
-        # print(el)
-        parsed[list(el.keys())[0]] = list(el.values())[0]
-    with open(FILENAME, "w") as f: json.dump(parsed, f, indent=4)
+    try:
+        data = Parallel(n_jobs=N_CORES, verbose=10)(delayed(parse_url)(h) for h in tqdm.tqdm(hrefs))
+        # print(data)
+        for el in data:
+            if el == { }: continue
+            # print(el)
+            parsed[list(el.keys())[0]] = list(el.values())[0]
+    except KeyboardInterrupt:
+        print("interrupted")
+    except Exception as e:
+        print(e)
+    finally:
+        with open(FILENAME, "w") as f: json.dump(parsed, f, indent=4)
 
 if __name__ == "__main__":
     if not os.path.exists(FILENAME_DEF):
