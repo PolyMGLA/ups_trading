@@ -1,0 +1,48 @@
+# Файлы и папки, которые нужно игнорировать
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# Виртуальные окружения
+venv/
+env/
+.venv/
+pip-log.txt
+
+# Настройки IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.swp
+*.bak
+
+# Кэш Python
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+
+# Файлы данных
+/data/
+*.csv
+*.json
+
+# Модели
+/models/
+*.h5
+*.hdf5
+*.joblib
+*.pkl
+
+# Файлы конфигураций с ключами доступа
+config.yaml
+*.env
+
+# Запросы API и результаты
+requests_cache.sqlite
