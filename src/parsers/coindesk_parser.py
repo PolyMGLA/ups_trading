@@ -68,7 +68,7 @@ def CoinDeskParser(FILENAME, NUM):
 
     #r = requests.get(COINDESK_ADDR + "/latest-crypto-news")
     driver = webdriver.Firefox()
-    driver.set_page_load_timeout(10)
+    driver.set_page_load_timeout(30)
     try:
         driver.get(COINDESK_ADDR + "/latest-crypto-news")
     except selenium.common.exceptions.TimeoutException as e:
@@ -82,7 +82,7 @@ def CoinDeskParser(FILENAME, NUM):
     try:
         for i in tqdm.tqdm(range(NUM)):
             driver.execute_script("arguments[0].click();", btn)
-            time.sleep(.65)
+            time.sleep(.5)
     except Exception as e:
         print(e)
     
