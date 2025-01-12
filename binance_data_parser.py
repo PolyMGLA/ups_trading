@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import requests
 
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 from joblib import delayed, Parallel
 from binance.client import Client, HistoricalKlinesType
 
@@ -53,4 +53,4 @@ def process_tick_joblib(ticker):
     )
     data.to_csv(f'{ticker}.csv')
 
-Parallel(n_jobs=-1)(delayed(process_tick_joblib)(ticker) for ticker in tqdm(TICKERS[:50]))
+Parallel(n_jobs=10)(delayed(process_tick_joblib)(ticker) for ticker in tqdm(TICKERS))
