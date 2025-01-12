@@ -15,11 +15,17 @@ def check_features(df: pd.Series,
     if df[f'RSI_{length_rsi}'] >= 80 and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
         return False
     if df[f'MACDh_{12}_{26}_{9}'] > 0 and df[f'RSI_{length_rsi}'] <= 20:
-        return 1
+        return True
     if df[f'MACDh_{12}_{26}_{9}'] < 0 and df[f'RSI_{length_rsi}'] >= 80:
-        return 0
-    
-
+        return False
+    if df['close'] > df[f'EMA_{length_ema}'] and df[f'RSI_{length_rsi}'] <= 20:
+        return True
+    if df['close'] < df[f'EMA_{length_ema}'] and df[f'RSI_{length_rsi}'] >= 80:
+        return False
+    if df[f'RSI_{length_rsi}'] <= 20 and df[f'STOCH'] <= 20:
+        return True
+    if df[f'RSI_{length_rsi}'] >= 80 and df[f'STOCH'] >= 80:
+        return False
 
 def get_features(df: pd.DataFrame,
                  length_sma: int,
@@ -56,6 +62,6 @@ def get_features(df: pd.DataFrame,
     df['f_pvt'] = np.where(df['PVT'] > df['PVT'].rolling(window=12).mean(), 1, -1)
 
     df.ta(kind='MACD', close = 'close', fast = 12, slow = 26, signal = 9)
-    
+    df.ta(kind='STOCH', high = df['high'], low = df['low'], close = df['close'], k = 14, d = 3, smooth_k = 3)
     df['return_next_2'] = np.where(df['return_next'].shift(-2).rolling(window=3).sum() > 0, 1, -1)
     df['return_next_class'] = np.where(df['return_next'] > 0, 1, 0)
