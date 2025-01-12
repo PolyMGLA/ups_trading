@@ -14,6 +14,10 @@ def check_features(df: pd.Series,
         return True
     if df[f'RSI_{length_rsi}'] >= 80 and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
         return False
+    if df[f'MACDh_{12}_{26}_{9}'] > 0 and df[f'RSI_{length_rsi}'] <= 20:
+        return 1
+    if df[f'MACDh_{12}_{26}_{9}'] < 0 and df[f'RSI_{length_rsi}'] >= 80:
+        return 0
     
 
 
@@ -51,6 +55,7 @@ def get_features(df: pd.DataFrame,
     df.ta(kind='PVT',append=True,centered=False,volume='volume',close='close', drift = drift_pvt)
     df['f_pvt'] = np.where(df['PVT'] > df['PVT'].rolling(window=12).mean(), 1, -1)
 
+    df.ta(kind='MACD', close = 'close', fast = 12, slow = 26, signal = 9)
     
     df['return_next_2'] = np.where(df['return_next'].shift(-2).rolling(window=3).sum() > 0, 1, -1)
     df['return_next_class'] = np.where(df['return_next'] > 0, 1, 0)
