@@ -1,6 +1,7 @@
 import os
 import csv
 import pandas as pd
+import numpy as np
 class Finloader:
     '''
     Uploading and concatenating row-by-row data from a directory across all files and filter "USDT"
@@ -20,7 +21,7 @@ class Finloader:
 
     def step(self):
         '''
-        do step and return DataFrame - next concatination object
+        do step and return (date, np.array(data)) - next concatination object
         '''
         lst = []
         fl = False
@@ -30,18 +31,30 @@ class Finloader:
                     k = next(i)[1:]
                     for j in range(len(k)):
                         if self.h[j]:
-                            lst += [k[j]]
+                            if k[j]=="":
+                                lst.append(np.nan)
+                            else:
+                                lst.append(k[j])
                 else:
                     k = next(i)
                     lst += [k[0]]
                     for j in range(len(k) - 1):
                         if self.h[j]:
-                            lst += [k[j + 1]]
+                            if k[j+1]=="":
+                                lst.append(np.nan)
+                            else:
+                                lst.append(k[j + 1])
                     fl=True
             except:
                 return None
-        return pd.DataFrame(columns=self.columns[1:], data=[lst[1:]], index=[lst[0]])
-    
+        #return {"columns":np.array(self.columns[1:]), "data":np.array(lst[1:]), "date": lst[0]}
+        return (lst[0], np.array(lst[1:],dtype=np.float64))
+        #return pd.DataFrame(columns=self.columns[1:], data=[lst[1:]], index=[lst[0]])
+    def get_columns(self):
+        '''
+        return list columns in concatination table
+        '''
+        return self.columns[1:]
     def __len__(self):
         '''
         return count row
