@@ -78,7 +78,7 @@ def get_features(df: pd.DataFrame,
     df['f_EMA'] = np.where(df['close'] > df[f'EMA_{length_ema}'], -1, 1)
     # ATR
     df['ATR'] = ta.atr(df['high'], df['low'], df['close'], length=atr_length)
-    # YOUR MOM
+    # MOM
     df.ta(kind='MOM', append=True, centered=False, close='close', length=length_mom)
     df['f_MOM'] = np.where(df[f'MOM_{length_mom}'] > 0, 1, -1)
     # RSI
