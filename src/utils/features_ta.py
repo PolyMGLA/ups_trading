@@ -98,6 +98,6 @@ def get_features(df: pd.DataFrame,
 
     df.ta(kind='MACD', close = 'close', fast = 12, slow = 26, signal = 9)
     df.ta(kind='STOCH', high = df['high'], low = df['low'], close = df['close'], k = 14, d = 3, smooth_k = 3)
-    df.ta(king='BBANDS', close = 'close', length = bbands_length, std = 2, ddof = 0)
+    df.ta(kind='BBANDS', close = 'close', length = bbands_length, std = 2, ddof = 0)
     df['return_next_2'] = np.where(df['return_next'].shift(-2).rolling(window=3).sum() > 0, 1, -1)
     df['return_next_class'] = np.where(df['return_next'] > 0, 1, 0)
