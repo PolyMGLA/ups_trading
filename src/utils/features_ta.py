@@ -9,7 +9,8 @@ def check_features(df: pd.Series,
                     length_rsi: int,
                     adx_length: int,
                     drift_pvt: int,
-                    atr_length: int) -> bool:
+                    atr_length: int,
+                    bbands_length) -> bool:
     if df[f'RSI_{length_rsi}'] <= 20 and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
         return True
     if df[f'RSI_{length_rsi}'] >= 80 and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
@@ -26,6 +27,35 @@ def check_features(df: pd.Series,
         return True
     if df[f'RSI_{length_rsi}'] >= 80 and df[f'STOCH'] >= 80:
         return False
+    if df[f'MACD_{12}_{26}_{9}'] > 0 and df['close'] > df[f'EMA_{length_ema}']:
+        return True
+    if df[f'MACD_{12}_{26}_{9}'] < 0 and df['close'] < df[f'EMA_{length_ema}']:
+        return False
+    if df[f'EMA_50'] > df[f'EMA_200'] and df[f'EMA_50'].shift(1) <= df[f'EMA_200'].shift(1):
+        return True
+    if df[f'EMA_50'] < df[f'EMA_200'] and df[f'EMA_50'].shift(1) >= df[f'EMA_200'].shift(1):
+        return False
+    if df[f'RSI_{length_rsi}'] > df[f'RSI_{length_rsi}'].shift(1) and df['close'] < df['close'].shift(1):
+        return True
+    if df[f'RSI_{length_rsi}'] < df[f'RSI_{length_rsi}'].shift(1) and df['close'] > df['close'].shift(1):
+        return False
+    if df['close'] <= df['BBL_20_2.0'] and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
+        return True
+    if df['close'] >= df['BBL_20_2.0'] and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
+        return False
+    if df['close'] < df['BBL_20_2.0'] and df[f'MACD_{12}_{26}_{9}'] > 0:
+        return True
+    if df['close'] > df['BBU_20_2.0'] and df[f'MACD_{12}_{26}_{9}'] < 0:
+        return False
+    if df[f'ADX_{adx_length}'] >= 25 and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
+        return True
+    if df[f'ADX_{adx_length}'] <= 20 and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
+        return False
+    if df['PVT'] > df['PVT'].shift(1) and df['close'] > df[f'EMA_{length_ema}']:
+        return True
+    if df['PVT'] < df['PVT'].shift(1) and df['close'] < df[f'EMA_{length_ema}']:
+        return False
+
 
 def get_features(df: pd.DataFrame,
                  length_sma: int,
@@ -34,7 +64,8 @@ def get_features(df: pd.DataFrame,
                  length_rsi: int,
                  adx_length: int,
                  drift_pvt: int,
-                 atr_length: int):
+                 atr_length: int,
+                 bbands_length):
     # SMA
     df.ta(kind='SMA', append=True, centered=False, close='close', length=length_sma)
     df['f_SMA'] = np.where(df['close'] > df[f'SMA_{length_sma}'], -1, 1)
@@ -63,5 +94,6 @@ def get_features(df: pd.DataFrame,
 
     df.ta(kind='MACD', close = 'close', fast = 12, slow = 26, signal = 9)
     df.ta(kind='STOCH', high = df['high'], low = df['low'], close = df['close'], k = 14, d = 3, smooth_k = 3)
+    df.ta(king='BBANDS', close = 'close', length = bbands_length, std = 2, ddof = 0)
     df['return_next_2'] = np.where(df['return_next'].shift(-2).rolling(window=3).sum() > 0, 1, -1)
     df['return_next_class'] = np.where(df['return_next'] > 0, 1, 0)
