@@ -41,11 +41,15 @@ def check_features(df: pd.Series,
         return False
     if df['close'] <= df['BBL_20_2.0'] and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
         return True
-    if df['close'] >= df['BBL_20_2.0'] and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
+    if df['close'] >= df['BBU_20_2.0'] and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
         return False
-    if df['close'] < df['BBL_20_2.0'] and df[f'MACD_{12}_{26}_{9}'] > 0:
+    if df['close'] <= df['BBL_20_2.0'] and df[f'MACD_{12}_{26}_{9}'] > 0:
         return True
-    if df['close'] > df['BBU_20_2.0'] and df[f'MACD_{12}_{26}_{9}'] < 0:
+    if df['close'] >= df['BBU_20_2.0'] and df[f'MACD_{12}_{26}_{9}'] < 0:
+        return False
+    if df['close'] <= df['BBL_20_2.0'] and df['close'] > df[f'EMA_{length_ema}']:
+        return True
+    if df['close'] >= df['BBU_20_2.0'] and df['close'] < df[f'EMA_{length_ema}']:
         return False
     if df[f'ADX_{adx_length}'] >= 25 and df[f'ATRr_{atr_length}'].mean() * 0.9 <= df[f'ATRr_{atr_length}'] <= df[f'ATRr_{atr_length}'].mean() * 1.1:
         return True
