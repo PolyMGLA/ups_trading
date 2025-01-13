@@ -38,7 +38,7 @@ class finloader:
         '''
         return count row
         '''
-        return len(pd.read_csv(os.listdir(self.path)[0]))
+        return len(pd.read_csv(self.path+"/"+os.listdir(self.path)[0]))
     def close(self):
         '''
         close all files
