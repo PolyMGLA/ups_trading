@@ -3,7 +3,7 @@ import csv
 import pandas as pd
 class finloader:
     '''
-    Uploading and concatenating row-by-row data from a directory across all files
+    Uploading and concatenating row-by-row data from a directory across all files and filter "USDT"
     '''
     def __init__(self,path:str):
         '''
@@ -12,11 +12,11 @@ class finloader:
         self.path=path
         self.iteration_list=[]
         self.columns=[]
-        
         for i in os.listdir(path):
             self.iteration_list.append(csv.reader(open(path+"/"+i)))
-            self.columns+=list(map(lambda x: x+"_"+i[:-4],next(self.iteration_list[-1])[1:]))
-        self.columns=["date"]+self.columns
+            self.columns+=list(map(lambda x: i[:-4]+"_"+x,next(self.iteration_list[-1])[1:]))
+        self.h=list(map(lambda x: x[-4:]=="USDT", self.columns))
+        self.columns=["date"]+list(filter(lambda x: x[-4:]=="USDT", self.columns))
         pass
     def step(self):
         '''
@@ -27,9 +27,16 @@ class finloader:
         for i in self.iteration_list:
             try:
                 if fl:
-                    lst+=next(i)[1:]
+                    k=next(i)[1:]
+                    for j in range(len(k)):
+                        if(self.h[j]):
+                            lst+=[k[j]]
                 else:
-                    lst+=next(i)
+                    k=next(i)
+                    lst+=[k[0]]
+                    for j in range(len(k)-1):
+                        if(self.h[j]):
+                            lst+=[k[j+1]]
                     fl=True
             except:
                 return None
@@ -44,6 +51,10 @@ class finloader:
         close all files
         '''
         path=self.path
+        self.iteration_list=[]
+        for i in os.listdir(path):
+            self.iteration_list.append(csv.reader(open(path+"/"+i)))
+            next(self.iteration_list[-1])
         for i in os.listdir(path):
             open(path+"/"+i).close()
         pass
