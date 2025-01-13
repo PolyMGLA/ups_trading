@@ -46,3 +46,7 @@ config.yaml
 
 # Запросы API и результаты
 requests_cache.sqlite
+
+# Результаты парсинга
+coindesk_news.json
+decrypt_news.json
