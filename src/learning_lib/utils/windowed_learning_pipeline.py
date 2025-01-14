@@ -56,6 +56,9 @@ class Windowed_learning_pipeline:
             df_test = pd.DataFrame(data = test_dat,
                                 index = test_time,
                                 columns=self.columns)
+            
+            df_test=df_test.ffill()
+            
             return df_test
     
     def drop_dropout(self):
@@ -109,5 +112,8 @@ class Windowed_learning_pipeline:
         df_test = pd.DataFrame(data = test_dat,
                                 index = test_time,
                                 columns=self.columns)
+        
+        df_train = df_train.ffill()
+        df_test = df_test.ffill()
         
         return (df_train, df_test)
