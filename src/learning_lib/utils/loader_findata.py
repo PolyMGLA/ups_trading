@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 class Finloader:
     '''
-    Uploading and concatenating row-by-row data from a directory across all files and filter "USDT"
+    Uploading and concatenating row-by-row data from a directory across all files and filter "USDT" and nan by listing
     '''
     def __init__(self, path: str):
         '''
@@ -16,8 +16,22 @@ class Finloader:
         for i in os.listdir(path):
             self.iteration_list.append(csv.reader(open(path + "/" + i)))
             self.columns += list(map(lambda x: i[:-4] + "_" + x, next(self.iteration_list[-1])[1:]))
-        self.h = list(map(lambda x: x[-4:] == "USDT", self.columns))
-        self.columns = ["date"] + list(filter(lambda x: x[-4:] == "USDT", self.columns))
+        f1=False
+        lst=[]
+        for i in self.iteration_list:
+            k = next(i)[1:]
+            for j in range(len(k)):
+                lst.append(k[j])
+        h2= np.array(list(map(lambda x: x[-4:] == "USDT", self.columns)))
+        h1= np.array(list(map(lambda x: x!="", lst)))
+        self.h= h1&h2
+        print(self.h)
+        col=[]
+        for i in range(len(self.columns)):
+            if(self.h[i]):
+                col.append(self.columns[i])
+        self.columns=["date"]+col
+        self.close()
 
     def step(self):
         '''
@@ -31,19 +45,13 @@ class Finloader:
                     k = next(i)[1:]
                     for j in range(len(k)):
                         if self.h[j]:
-                            if k[j]=="":
-                                lst.append(np.nan)
-                            else:
-                                lst.append(k[j])
+                            lst.append(k[j])
                 else:
                     k = next(i)
-                    lst += [k[0]]
+                    lst.append(k[0])
                     for j in range(len(k) - 1):
                         if self.h[j]:
-                            if k[j+1]=="":
-                                lst.append(np.nan)
-                            else:
-                                lst.append(k[j + 1])
+                            lst.append(k[j + 1])
                     fl=True
             except:
                 return None
