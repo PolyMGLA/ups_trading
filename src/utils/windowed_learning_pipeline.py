@@ -15,6 +15,9 @@ class windowed_learning_pipeline:
         - _dropout_size: размер выбрасываемых значений
         - _win_size: размер окна
         - _win_train_size: 
+
+        Порядок работы:
+        get_test() нужное число раз -> drop_dropout() -> get_test()
         '''
 
         self.train_size = _train_size
@@ -33,13 +36,15 @@ class windowed_learning_pipeline:
         self.win_time = deque()
 
     def get_test(self):
-        if not self.dropout_flag:
+        '''Возвращает тестовую выборку. Если окна и дропаут не сброшены - возвращает None.'''
+        if not self.dropout_flag or self.getted_cnt == self.length:
             return None
         else:
             test_dat = []
             test_time = []
             for i in tqdm.tqdm(range(self.getted_cnt, self.length)):
                 dat, time = self.data.step()
+                self.getted_cnt +=1
                 test_dat.append(dat)
                 test_time.append(time)
             df_test = pd.DataFrame(data = test_dat,
@@ -47,9 +52,10 @@ class windowed_learning_pipeline:
                                 columns=self.columns)
             return df_test
     
-    def gone_dropout(self):
+    def drop_dropout(self):
+        '''Сбрасывает дропаут (данные между окнами и тестом). Если уже сброшены - вернёт None.'''
         if self.dropout_flag == 1:
-            raise "NotImplementedError"
+            return None
         self.dropout_flag = 1
         print("Удаление дропаута...")
         for i in tqdm.tqdm(range(self.dropout_size)):
@@ -57,11 +63,11 @@ class windowed_learning_pipeline:
             self.data.step()
     
     def get_nxt(self):
+        '''Получить следующие train и test, если вся выборка выгружена вернёт None'''
         if self.dropout_flag:
             raise "NotImplementedError"
         
         if self.getted_cnt + self.win_size - self.win_train_size >= self.train_size:
-            self.gone_dropout()
             return None
         
         if self.getted_cnt == 0:
@@ -95,3 +101,5 @@ class windowed_learning_pipeline:
         df_test = pd.DataFrame(data = test_dat,
                                 index = test_time,
                                 columns=self.columns)
+        
+        return (df_train, df_test)
