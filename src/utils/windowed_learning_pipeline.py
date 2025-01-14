@@ -15,6 +15,7 @@ class windowed_learning_pipeline:
         - _dropout_size: размер выбрасываемых значений
         - _win_size: размер окна
         - _win_train_size: 
+        
 
         Порядок работы:
         get_test() нужное число раз -> drop_dropout() -> get_test()
@@ -36,7 +37,7 @@ class windowed_learning_pipeline:
         self.win_time = deque()
 
     def get_test(self):
-        '''Возвращает тестовую выборку. Если окна и дропаут не сброшены - возвращает None.'''
+        '''Возвращает тестовую выборку test:pd.DataFrame. Если окна и дропаут не сброшены - возвращает None.'''
         if not self.dropout_flag or self.getted_cnt == self.length:
             return None
         else:
@@ -63,7 +64,9 @@ class windowed_learning_pipeline:
             self.data.step()
     
     def get_nxt(self):
-        '''Получить следующие train и test, если вся выборка выгружена вернёт None'''
+        '''Получить следующие train и test, если вся выборка выгружена вернёт None
+            Возвращает (train:pd.DataFrame, test:pd.DataFrame)
+        '''
         if self.dropout_flag:
             raise "NotImplementedError"
         
