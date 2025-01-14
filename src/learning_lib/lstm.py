@@ -5,16 +5,22 @@ import torch.optim as optim
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import sys
+import os
+
+from utils.windowed_learning_pipeline import Windowed_learning_pipeline
 
 # Set random seed for reproducibility
 np.random.seed(0)
 torch.manual_seed(0)
 
-#TODO: добавить ввод данных
-trainX = np.array()
-trainY = np.array()
-testX = np.array()
-testY = np.array()
+pipeline = Windowed_learning_pipeline(
+    _pth = "./src/data/",
+    _train_size = 300000,
+    _dropout_size = 2000,
+    _win_size = 10000,
+    _win_train_size = 20000
+)
 
 class LSTMModel(nn.Module):
     def __init__(self, input_dim, hidden_dim, layer_dim, output_dim):
@@ -36,28 +42,36 @@ class LSTMModel(nn.Module):
         return out, hn, cn
     
 model = LSTMModel(input_dim=1, hidden_dim=100, layer_dim=1, output_dim=1)
-criterion = nn.MAELoss()
+criterion = nn.L1Loss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
 # Training loop
 num_epochs = 100
 h0, c0 = None, None  # Initialize hidden and cell states
 
-for epoch in range(num_epochs):
-    model.train()
-    optimizer.zero_grad()
+window = pipeline.get_nxt()
 
-    # Forward pass
-    outputs, h0, c0 = model(trainX, h0, c0)
+while window is not None:
+    train, test = window
+    trainX, trainY = train.drop(["close"], axis=1, inplace=False), train["close"]
 
-    # Compute loss
-    loss = criterion(outputs, trainY)
-    loss.backward()
-    optimizer.step()
+    for epoch in range(num_epochs):
+        model.train()
+        optimizer.zero_grad()
 
-    # Detach hidden and cell states to prevent backpropagation through the entire sequence
-    h0 = h0.detach()
-    c0 = c0.detach()
+        # Forward pass
+        outputs, h0, c0 = model(trainX, h0, c0)
 
-    if (epoch+1) % 10 == 0:
-        print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+        # Compute loss
+        loss = criterion(outputs, trainY)
+        loss.backward()
+        optimizer.step()
+
+        # Detach hidden and cell states to prevent backpropagation through the entire sequence
+        h0 = h0.detach()
+        c0 = c0.detach()
+
+        if (epoch+1) % 10 == 0:
+            print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
+    
+    window = pipeline.get_nxt()

@@ -2,11 +2,16 @@ import datetime
 from collections import deque
 
 import tqdm
-from loader_findata import Finloader
+from .loader_findata import Finloader
 import pandas as pd
 import numpy as np
-class windowed_learning_pipeline:
-    def __init__(self, _pth:str, _train_size:int, _dropout_size:int,  _win_size:int, _win_train_size:int):
+class Windowed_learning_pipeline:
+    def __init__(self,
+                 _pth: str,
+                 _train_size: int,
+                 _dropout_size: int,
+                 _win_size: int,
+                 _win_train_size: int):
         '''
         С помощью метода get_next() выдаёт следующее скользящее окно для обучения LSTM сети
         Аргументы:
@@ -23,7 +28,7 @@ class windowed_learning_pipeline:
 
         self.train_size = _train_size
         self.data = Finloader(_pth)
-        self.length =len(self.data)
+        self.length = len(self.data)
         self.dropout_size = _dropout_size
         self.win_size = _win_size
         self.win_train_size = _win_train_size
@@ -60,7 +65,7 @@ class windowed_learning_pipeline:
         self.dropout_flag = 1
         print("Удаление дропаута...")
         for i in tqdm.tqdm(range(self.dropout_size)):
-            self.getted_cnt+=1
+            self.getted_cnt += 1
             self.data.step()
     
     def get_nxt(self):
@@ -76,14 +81,14 @@ class windowed_learning_pipeline:
         if self.getted_cnt == 0:
             for i in tqdm.tqdm(range(self.win_size)):
                 cur_time, cur_dat = self.data.step()
-                self.getted_cnt+=1
+                self.getted_cnt += 1
                 self.win.append(cur_dat)
                 self.win_time.append(cur_time)
             print("first iteration OK")
         else:
             for i in tqdm.tqdm(range(self.win_size - self.win_train_size)):
                 cur_time, cur_dat = self.data.step()
-                self.getted_cnt+=1
+                self.getted_cnt += 1
 
                 self.win.popleft()
                 self.win_time.popleft()
