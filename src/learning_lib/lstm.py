@@ -18,8 +18,8 @@ pipeline = Windowed_learning_pipeline(
     _pth = "./src/data/",
     _train_size = 300000,
     _dropout_size = 2000,
-    _win_size = 10000,
-    _win_train_size = 20000
+    _win_size = 20000,
+    _win_train_size = 15000
 )
 
 class LSTMModel(nn.Module):
@@ -33,6 +33,7 @@ class LSTMModel(nn.Module):
     def forward(self, x, h0=None, c0=None):
         # If hidden and cell states are not provided, initialize them as zeros
         if h0 is None or c0 is None:
+            print(x)
             h0 = torch.zeros(self.layer_dim, x.size(0), self.hidden_dim).to(x.device)
             c0 = torch.zeros(self.layer_dim, x.size(0), self.hidden_dim).to(x.device)
         
@@ -41,7 +42,7 @@ class LSTMModel(nn.Module):
         out = self.fc(out[:, -1, :])  # Selecting the last output
         return out, hn, cn
     
-model = LSTMModel(input_dim=1, hidden_dim=100, layer_dim=1, output_dim=1)
+model = LSTMModel(input_dim=960, hidden_dim=100, layer_dim=1, output_dim=120)
 criterion = nn.L1Loss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 
@@ -49,11 +50,38 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 num_epochs = 100
 h0, c0 = None, None  # Initialize hidden and cell states
 
+def create_dataset(dataset: np.ndarray, lookback: int, predict_size: int):
+    """принимает numpy-array и превращает его в датасет для обучения LSTM
+    
+    Args:
+        dataset: нампай массив с данными для обучения
+        lookback: размер исторических данных для предсказания
+        predict_size: сколько значений вперёд предсказываем
+
+    Returns:
+        X, y: np.ndarray где X - входные данные, y - целевые
+
+    """
+    X, y = [], [] #создадим массивы входных и целевых данных
+    i = 0
+    while True: #Нарежем
+        if i + lookback + predict_size > len(dataset):
+            break
+        feature = dataset[i:i + lookback]
+        target = dataset[i + lookback:i + lookback + predict_size]
+        X.append(feature)
+        y.append(target)
+        i += lookback
+    return torch.tensor(X, dtype=torch.float64), torch.tensor(y, dtype=torch.float64)
+
 window = pipeline.get_nxt()
 
 while window is not None:
     train, test = window
-    trainX, trainY = train.drop(["close"], axis=1, inplace=False), train["close"]
+    train = train.to_numpy()
+    test = test.to_numpy()
+    trainX, trainY = create_dataset(train, 1000, 400)
+    print(trainX)
 
     for epoch in range(num_epochs):
         model.train()
