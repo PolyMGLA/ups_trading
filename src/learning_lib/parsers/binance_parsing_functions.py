@@ -94,7 +94,10 @@ def parse_tickers(TICKERS, CANDLETIME, STARTDATE):
     return close, open, high, low, volume, returns
 
 def neutralize(alpha):
-    return alpha - alpha.mean(axis=1)
+    return alpha.substract(
+        alpha.mean(axis=1),
+        axis=0
+    )
 
 def scale(alpha):
     return alpha.div(
