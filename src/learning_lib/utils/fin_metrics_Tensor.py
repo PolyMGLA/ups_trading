@@ -1,17 +1,18 @@
 import numpy as np
 import pandas as pd
+import torch as pt
 
-class FinCalculations:
+class FinCalculationsTensor:
     '''
     Класс для вычисления результатов альфа-стратегии.
     Содержит методы для расчета доходности (PnL), коэффициента Шарпа, максимальной просадки и других метрик.
     '''
 
     @staticmethod
-    def pnl_vec(
-        alpha: pd.DataFrame,
-        returns: pd.DataFrame    
-    ) -> pd.Series:
+    def pnl_tensor(
+        alpha: pt.Torch,
+        returns: pt.Torch    
+    ) -> pt.Torch:
         '''
         Метод для расчета вектора доходности (PnL) по альфе и доходности активов.
         Альфа умножается на доходность для получения доходности по каждому активу.
@@ -20,7 +21,7 @@ class FinCalculations:
         :param returns: Датафрейм с доходностью активов.
         :return: Серия с результатами доходности по каждому временному интервалу.
         '''
-        return (alpha * returns).sum(axis=1)
+        return pt.multiply(alpha, returns).sum(dim=1)
     
     @staticmethod
     def pnl(
@@ -35,7 +36,7 @@ class FinCalculations:
         :param returns: Датафрейм с доходностью активов.
         :return: Финальное значение PnL.
         '''
-        return FinCalculations.pnl_vec(alpha, returns).sum()
+        return FinCalculationsTensor.pnl_tensor(alpha, returns).sum(dim=0)
     
     @staticmethod
     def sharpe(
@@ -50,10 +51,10 @@ class FinCalculations:
         :param returns: Датафрейм с доходностью активов.
         :return: Коэффициент Шарпа для данной альфа-стратегии.
         '''
-        return FinCalculations.pnl(alpha, returns).sum() / FinCalculations.pnl(alpha, returns).std()
+        return pt.multiply(alpha, returns).sum() / pt.multiply(alpha, returns).std()
     
     @staticmethod
-    def drawdown_vec(
+    def drawdown_tensor(
         alpha: pd.DataFrame,
         returns: pd.DataFrame
     ) -> pd.Series:
@@ -66,10 +67,10 @@ class FinCalculations:
         :return: Вектор просадок для каждого временного интервала.
         '''
         return (
-            FinCalculations.pnl_vec(alpha, returns).cummax() - \
-            FinCalculations.pnl_vec(alpha, returns)
+            FinCalculationsTensor.pnl_tensor(alpha, returns).cummax() - \
+            FinCalculationsTensor.pnl_tensor(alpha, returns)
         ) / (
-            FinCalculations.pnl_vec(alpha, returns).cummax() + 1
+            FinCalculationsTensor.pnl_tensor(alpha, returns).cummax() + 1
         )
     
     @staticmethod
@@ -85,10 +86,10 @@ class FinCalculations:
         :param returns: Датафрейм с доходностью активов.
         :return: Максимальная просадка.
         '''
-        return FinCalculations.drawdown_vec(alpha, returns).max()
+        return FinCalculationsTensor.drawdown_vec(alpha, returns).max()
 
     @staticmethod
-    def turnover_vec(
+    def turnover_tensor(
         alpha: pd.DataFrame
     ) -> pd.Series:
         '''
@@ -110,7 +111,7 @@ class FinCalculations:
         :param alpha: Датафрейм с весами альфа-стратегии.
         :return: Среднее изменение (turnover) весов стратегии.
         '''
-        return FinCalculations.turnover_vec(alpha).mean()
+        return FinCalculationsTensor.turnover_vec(alpha).mean()
     
     @staticmethod
     def decay(
