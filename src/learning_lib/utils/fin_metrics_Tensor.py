@@ -141,8 +141,8 @@ class FinCalculationsTensor:
         :param returns: tensor с доходностью активов.
         :return: Значение Profit Margin.
         '''
-        pnl = FinCalculations.pnl_vec(alpha, returns)
-        tvr = FinCalculations.turnover_vec(alpha)
+        pnl = FinCalculationsTensor.pnl_vec(alpha, returns)
+        tvr = FinCalculationsTensor.turnover_vec(alpha)
         return pnl.mean() / tvr.mean() if tvr.mean() != 0 else np.nan
 
     @staticmethod
@@ -162,8 +162,8 @@ class FinCalculationsTensor:
         :return: tensor с рассчитанными метриками.
         '''
         metrics_dict = {}
-        metrics_dict["Pnl"] = FinCalculations.pnl(alpha, returns)
-        metrics_dict["Sharpe"] = FinCalculations.sharpe(alpha, returns)
-        metrics_dict["Max Drawdown"] = FinCalculations.maxDrawdown(alpha, returns)
-        metrics_dict["Turnover"] = FinCalculations.turnover(alpha)
+        metrics_dict["Pnl"] = FinCalculationsTensor.pnl(alpha, returns)
+        metrics_dict["Sharpe"] = FinCalculationsTensor.sharpe(alpha, returns)
+        metrics_dict["Max Drawdown"] = FinCalculationsTensor.maxDrawdown(alpha, returns)
+        metrics_dict["Turnover"] = FinCalculationsTensor.turnover(alpha)
         return pd.DataFrame([metrics_dict])
