@@ -1,0 +1,26 @@
+.dashboard {
+  width: 1280px;
+  height: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: #30313A; /* Основной фон */
+  color: white;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.row {
+  display: flex;
+  gap: 20px;
+}
+
+.row > div {
+  flex: 1;
+  background-color: #21222D; /* Фон для блоков */
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}

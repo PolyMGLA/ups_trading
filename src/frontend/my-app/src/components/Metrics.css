@@ -1,0 +1,33 @@
+.metrics {
+    position: relative; /* Чтобы позиционировать элементы внутри */
+  }
+  
+  .metrics ul {
+    list-style: none; /* Убирает маркеры списка */
+    padding: 3px; /* Убирает отступы */
+    margin: 0; /* Убирает отступы */
+  }
+  
+  .metrics li {
+    position: relative; /* Позволяет управлять позиционированием */
+    padding-right: 50px; /* Отступ справа для текста */
+    margin-bottom: 10px; /* Расстояние между строками */
+    padding: 3px;
+  }
+  
+  .metric-box {
+    position: absolute; /* Абсолютное позиционирование */
+    right: 40px; /* Отступ от правого края родителя */
+    top: 50%; /* Центрирование по вертикали относительно строки */
+    transform: translateY(-50%); /* Сдвиг для точного центрирования */
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    color: black; /* Цвет текста */
+    background-color: #b1f5ec; /* Цвет фона */
+    border: 2px solid rgba(125, 174, 167, 0.88); /* Цвет обводки */
+    border-radius: 4px; /* Закругленные углы */
+    text-align: center;
+  }
+  
