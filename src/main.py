@@ -27,7 +27,7 @@ async def pie_chart():
     values = [40, 30, 20, 10]
     
     # Цветовая палитра
-    colors = ["#6c757d", "#6daedb", "#98d5ca", "#b8f5e0"]
+    colors = ["#6c757d", "#6daedb", "#98d5ca", "#b8f5e0", "#005557"]
 
     # Создание диаграммы
     fig = go.Figure(data=[go.Pie(labels=labels, values=values, marker=dict(colors=colors))])
