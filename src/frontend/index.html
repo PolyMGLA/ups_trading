@@ -71,12 +71,21 @@
     <div class="row">
       <div class="performance-chart">
         <h2>График доходности, %</h2>
+<<<<<<< HEAD
         <div id="line-chart" style="width:100%; height:400px;"></div>
       </div>
       <div class="sectors-chart">
         <h2>Распределение средств по активам</h2>
         <div id="pie-chart" style="width:100%; height:350px; margin-top:20px;"></div>
       </div>      
+=======
+        <div class="chart-placeholder"></div>
+      </div>
+      <div class="sectors-chart">
+        <h2>Сектора</h2>
+        <div class="chart-placeholder"></div>
+      </div>
+>>>>>>> 1f4218a3616992f16737f7ed42bf696e5e863835
     </div>
     <footer class="footer">
       <div class="contact-info">
@@ -87,6 +96,7 @@
       </div>
     </footer>
   </div>
+<<<<<<< HEAD
 
   <script>
     // График доходности
@@ -160,6 +170,16 @@
 
   Plotly.newPlot('pie-chart', data, layout);
     });
+=======
+  <script src="https://cdn.plot.ly/plotly-2.34.0.js"></script>
+  <script>
+    var chart = document.getElementsByClassName("chart-placeholder")[0];
+
+    Plotly.newPlot( chart, [{
+	    x: [1, 2, 3, 4, 5],
+	    y: [1, 2, 4, 8, 16] }], {
+	    margin: { t: 0 } } );
+>>>>>>> 1f4218a3616992f16737f7ed42bf696e5e863835
   </script>
 </body>
 </html>
