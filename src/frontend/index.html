@@ -71,21 +71,12 @@
     <div class="row">
       <div class="performance-chart">
         <h2>График доходности, %</h2>
-<<<<<<< HEAD
-        <div id="line-chart" style="width:100%; height:400px;"></div>
-      </div>
-      <div class="sectors-chart">
-        <h2>Распределение средств по активам</h2>
-        <div id="pie-chart" style="width:100%; height:350px; margin-top:20px;"></div>
-      </div>      
-=======
-        <div class="chart-placeholder"></div>
+        <div class="chart-placeholder">[Chart]</div>
       </div>
       <div class="sectors-chart">
         <h2>Сектора</h2>
-        <div class="chart-placeholder"></div>
+        <div class="chart-placeholder">[Pie Chart]</div>
       </div>
->>>>>>> 1f4218a3616992f16737f7ed42bf696e5e863835
     </div>
     <footer class="footer">
       <div class="contact-info">
@@ -96,90 +87,5 @@
       </div>
     </footer>
   </div>
-<<<<<<< HEAD
-
-  <script>
-    // График доходности
-    document.addEventListener("DOMContentLoaded", function() {
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const returns = [10, 14, 13, 25, 32, 29, 41, 52, 69, 60, 77, 88];
-
-      const lineData = [{
-        x: months,
-        y: returns,
-        type: 'scatter',
-        mode: 'lines+markers',
-        line: {
-          color: '#a8f3cf',
-          width: 3
-        },
-        marker: {
-          size: 8,
-          color: '#61d4b3'
-        },
-        name: 'Доходность'
-      }];
-
-      const lineLayout = {
-        title: {
-          text: 'Доходность по месяцам',
-          font: { color: 'white', size: 20 },
-          x: 0.5
-        },
-        paper_bgcolor: '#21222D',
-        plot_bgcolor: '#2a2b3d',
-        xaxis: {
-          title: 'Месяцы',
-          titlefont: { color: 'white' },
-          tickfont: { color: 'white' }
-        },
-        yaxis: {
-          title: 'Доходность (%)',
-          titlefont: { color: 'white' },
-          tickfont: { color: 'white' }
-        }
-      };
-
-      Plotly.newPlot('line-chart', lineData, lineLayout);
-
-      const data = [{
-    values: [27, 43, 30],
-    labels: ['BTC, ETH', 'Altcoins', 'Stablecoins'],
-    type: 'pie',
-    marker: {
-      colors: ['#4f8aa6', '#70c1b3', '#b2dbbf'] // Цвета секторов
-    },
-    textinfo: '' // Убираем текстовые подписи
-  }];
-
-  const layout = {
-    title: 'Распределение средств по активам',
-    font: {
-      color: 'white'
-    },
-    paper_bgcolor: '#21222D',
-    margin: {
-      t: 50, // Отступ сверху
-      b: 20, // Отступ снизу
-      l: 20, // Отступ слева
-      r: 20  // Отступ справа
-    },
-    height: 350, // Высота диаграммы
-    width: 550 // Ширина диаграммы
-  };
-
-  Plotly.newPlot('pie-chart', data, layout);
-    });
-=======
-  <script src="https://cdn.plot.ly/plotly-2.34.0.js"></script>
-  <script>
-    var chart = document.getElementsByClassName("chart-placeholder")[0];
-
-    Plotly.newPlot( chart, [{
-	    x: [1, 2, 3, 4, 5],
-	    y: [1, 2, 4, 8, 16] }], {
-	    margin: { t: 0 } } );
->>>>>>> 1f4218a3616992f16737f7ed42bf696e5e863835
-  </script>
 </body>
 </html>
