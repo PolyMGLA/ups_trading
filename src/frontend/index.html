@@ -62,11 +62,11 @@
     <div class="row">
       <div class="performance-chart">
         <h2>График доходности, %</h2>
-        <div class="chart-placeholder">[Chart]</div>
+        <div class="chart-placeholder"></div>
       </div>
       <div class="sectors-chart">
         <h2>Сектора</h2>
-        <div class="chart-placeholder">[Pie Chart]</div>
+        <div class="chart-placeholder"></div>
       </div>
     </div>
     <footer class="footer">
@@ -78,5 +78,14 @@
       </div>
     </footer>
   </div>
+  <script src="https://cdn.plot.ly/plotly-2.34.0.js"></script>
+  <script>
+    var chart = document.getElementsByClassName("chart-placeholder")[0];
+
+    Plotly.newPlot( chart, [{
+	    x: [1, 2, 3, 4, 5],
+	    y: [1, 2, 4, 8, 16] }], {
+	    margin: { t: 0 } } );
+  </script>
 </body>
 </html>
