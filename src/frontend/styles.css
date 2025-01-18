@@ -24,7 +24,7 @@ body {
   .row > div {
     flex: 1;
     background-color: #21222D;
-    padding: 20px;
+    padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
@@ -50,31 +50,16 @@ body {
   .cyan { background-color: #00bcd4; width: 19%; }
   .pink { background-color: #e91e63; width: 29%; }
   
-  .metrics-container {
-    color: white;
-    background-color: #21222D;
-    padding: 8px;
-    border-radius: 10px;
+  .metrics ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
   
-  .metric {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px; /* Увеличьте это значение для большего расстояния */
+  .metrics li {
+    margin-bottom: 10px;
+    position: relative;
   }
-  
-  .metric:last-child {
-    margin-bottom: 0; /* Убираем отступ для последнего элемента */
-  }
-  
-  .value {
-    background-color: #b1f5ec; /* Цвет фона значений */
-    color: black;
-    padding: 5px 8px;
-    border: 2px solid #7daea7e0;
-    border-radius: 4px;
-  }
-  
   
   .metric-box {
     position: absolute;
@@ -86,7 +71,7 @@ body {
     font-weight: bold;
     color: black;
     background-color: #b1f5ec;
-    border: 2px solid #7daea7e0;
+    border: 2px solid rgba(125, 174, 167, 0.88);
     border-radius: 4px;
   }
   

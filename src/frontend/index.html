@@ -89,12 +89,15 @@
   </div>
 
   <script>
+    async function parse(url) {
+        let response_graph = await fetch(url);
+        let response_graphText = await response_graph.text();
+        return response_graphText;
+    }
     async function fetchTest() {
-        let response = await fetch('http://0.0.0.0:8000/graph_data');
-        let responseText = await response.text();
-        console.log(responseText);
-        let returns = eval(responseText);
-        
+        parse("http://0.0.0.0:8000/graph_data").then(function(text) {
+        let returns = eval(text);
+        console.log(returns);
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       //const returns = [10, 14, 13, 25, 32, 29, 41, 52, 69, 60, 77, 88];
 
@@ -135,9 +138,17 @@
       };
 
       Plotly.newPlot('line-chart', lineData, lineLayout);
+
+    });
+
+    parse("http://0.0.0.0:8000/pie_data").then(function(text) {
+      let pair = eval(text);
+      console.log(pair);
+      let values = pair[0];
+      let labels = pair[1];
       const data = [{
-    values: [27, 43, 30],
-    labels: ['BTC, ETH', 'Altcoins', 'Stable-coins'],
+    values: values,
+    labels: labels,
     type: 'pie',
     marker: {
       colors: ['#4f8aa6', '#70c1b3', '#b2dbbf'] // Цвета секторов
@@ -162,7 +173,8 @@
   };
 
   Plotly.newPlot('pie-chart', data, layout);
-    }
+    })
+  };
     document.addEventListener("DOMContentLoaded", function() {
       (async() => {
           await fetchTest();
