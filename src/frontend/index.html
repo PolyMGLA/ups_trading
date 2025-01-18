@@ -89,10 +89,14 @@
   </div>
 
   <script>
-    // График доходности
-    document.addEventListener("DOMContentLoaded", function() {
+    async function fetchTest() {
+        let response = await fetch('http://0.0.0.0:8000/graph_data');
+        let responseText = await response.text();
+        console.log(responseText);
+        let returns = eval(responseText);
+        
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const returns = [10, 14, 13, 25, 32, 29, 41, 52, 69, 60, 77, 88];
+      //const returns = [10, 14, 13, 25, 32, 29, 41, 52, 69, 60, 77, 88];
 
       const lineData = [{
         x: months,
@@ -131,7 +135,6 @@
       };
 
       Plotly.newPlot('line-chart', lineData, lineLayout);
-
       const data = [{
     values: [27, 43, 30],
     labels: ['BTC, ETH', 'Altcoins', 'Stable-coins'],
@@ -159,6 +162,11 @@
   };
 
   Plotly.newPlot('pie-chart', data, layout);
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+      (async() => {
+          await fetchTest();
+      })();
     });
   </script>
 </body>
