@@ -141,39 +141,9 @@
 
     });
 
-    parse("http://0.0.0.0:8000/pie_data").then(function(text) {
-      let pair = eval(text);
-      console.log(pair);
-      let values = pair[0];
-      let labels = pair[1];
-      const data = [{
-    values: values,
-    labels: labels,
-    type: 'pie',
-    marker: {
-      colors: ['#4f8aa6', '#70c1b3', '#b2dbbf'] // Цвета секторов
-    },
-    textinfo: '' // Убираем текстовые подписи
-  }];
-
-  const layout = {
-    title: 'Распределение средств по активам',
-    font: {
-      color: 'white'
-    },
-    paper_bgcolor: '#21222D',
-    margin: {
-      t: 50, // Отступ сверху
-      b: 20, // Отступ снизу
-      l: 20, // Отступ слева
-      r: 20  // Отступ справа
-    },
-    height: 350, // Высота диаграммы
-    width: 550 // Ширина диаграммы
-  };
-
-  Plotly.newPlot('pie-chart', data, layout);
-    })
+    parse("http://0.0.0.0:8000/piechart").then(function(text) {
+      document.getElementById("pie-chart").innerHTML = text;
+    });
   };
     document.addEventListener("DOMContentLoaded", function() {
       (async() => {
