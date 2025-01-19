@@ -94,60 +94,18 @@
         let response_graphText = await response_graph.text();
         return response_graphText;
     }
-    async function fetchTest() {
-        parse("http://0.0.0.0:8000/graph_data").then(function(text) {
-        let returns = eval(text);
-        console.log(returns);
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      //const returns = [10, 14, 13, 25, 32, 29, 41, 52, 69, 60, 77, 88];
+    async function load_graphs() {
+        parse("http://0.0.0.0:8000/graphchart").then(function(text) {
+          document.getElementById("line-chart").innerHTML = text;
+        });
 
-      const lineData = [{
-        x: months,
-        y: returns,
-        type: 'scatter',
-        mode: 'lines+markers',
-        line: {
-          color: '#a8f3cf',
-          width: 3
-        },
-        marker: {
-          size: 8,
-          color: '#61d4b3'
-        },
-        name: 'Доходность'
-      }];
-
-      const lineLayout = {
-        title: {
-          text: 'Доходность по месяцам',
-          font: { color: 'white', size: 20 },
-          x: 0.5
-        },
-        paper_bgcolor: '#21222D',
-        plot_bgcolor: '#2a2b3d',
-        xaxis: {
-          title: 'Месяцы',
-          titlefont: { color: 'white' },
-          tickfont: { color: 'white' }
-        },
-        yaxis: {
-          title: 'Доходность (%)',
-          titlefont: { color: 'white' },
-          tickfont: { color: 'white' }
-        }
-      };
-
-      Plotly.newPlot('line-chart', lineData, lineLayout);
-
-    });
-
-    parse("http://0.0.0.0:8000/piechart").then(function(text) {
-      document.getElementById("pie-chart").innerHTML = text;
-    });
-  };
+        parse("http://0.0.0.0:8000/piechart").then(function(text) {
+          document.getElementById("pie-chart").innerHTML = text;
+        });
+    };
     document.addEventListener("DOMContentLoaded", function() {
       (async() => {
-          await fetchTest();
+          await load_graphs();
       })();
     });
   </script>

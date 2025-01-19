@@ -39,8 +39,33 @@ async def pie_chart():
     
     return FileResponse(chart_path)
 
+@app.get("/graphchart")
+async def graph_chart():
+    labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    values = [10, 14, 13, 25, 66, 29, 41, 52, 69, 60, 77, 88]
+    
+    # Цветовая палитра
+    colors = ["#6c757d", "#6daedb", "#98d5ca", "#b8f5e0", "#005557"]
+
+    # Создание диаграммы
+    fig = go.Figure(data=[go.Line(x=labels, y=values)])
+
+    # Настройка диаграммы
+    fig.update_layout(
+        title="Круговая диаграмма",
+        template="plotly_dark"
+    )
+
+    # Сохранение диаграммы в HTML
+    chart_path = os.path.join(os.getcwd(), "src/frontend/graph_chart.html")
+    fig.write_html(chart_path)
+    
+    return FileResponse(chart_path)
+
 @app.get("/{_filename}")
 async def getfile(_filename: str):
+    if _filename not in ["index.html", "styles.css", "pie_data", "graph_data", "favicon.ico"]:
+        return Response(status_code=status.HTTP_403_FORBIDDEN)
     file = os.path.join(os.getcwd(), "src/frontend", _filename)
     return FileResponse(file)
 
