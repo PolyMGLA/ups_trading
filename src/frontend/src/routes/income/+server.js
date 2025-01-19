@@ -1,8 +1,9 @@
 import { json } from "@sveltejs/kit";
+import income from "$lib/data/income.json";
 
 export function GET() {
-    const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const values = [10, 14, 13, 25, 66, 29, 41, 52, 69, 60, 77, 88];
+    const labels = income.labels;
+    const values = income.values;
 
     return json({ labels: labels, values: values });
 }

@@ -1,13 +1,8 @@
 import { json } from "@sveltejs/kit";
+import metrics from "$lib/data/metrics.json";
 
 export function GET() {
-    const data = {
-        pnl: 46,
-        sharp: 46,
-        profit_margin: 46,
-        max_drawdown: 46,
-        turnover: 46
-    };
+    const data = metrics.data;
 
     return json({ data: data });
 }

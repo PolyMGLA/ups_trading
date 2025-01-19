@@ -1,8 +1,9 @@
 import { json } from "@sveltejs/kit";
+import allocation from "$lib/data/allocation.json";
 
 export function GET() {
-    const labels = ['BTC, ETH', 'Альт-коины', 'Стейбл-коины'];
-    const values = [27, 43, 50];
+    const labels = allocation.labels;
+    const values = allocation.values;
 
     return json({ labels: labels, values: values });
 }
