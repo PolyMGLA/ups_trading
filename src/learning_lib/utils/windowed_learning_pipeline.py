@@ -2,7 +2,7 @@ import datetime
 from collections import deque
 
 import tqdm
-from .loader_findata import Finloader
+from loader_findata import Finloader
 import pandas as pd
 import numpy as np
 class Windowed_learning_pipeline:
@@ -13,7 +13,7 @@ class Windowed_learning_pipeline:
                  _win_size: int,
                  _win_train_size: int):
         '''
-        С помощью метода get_next() выдаёт следующее скользящее окно для обучения LSTM сети
+        С помощью метода get_nxt() выдаёт следующее скользящее окно для обучения LSTM сети
         Аргументы:
         - _pth: путь к 9 csv файлам с рыночными данными
         - _train_size: размер тренировочной выборки
@@ -23,7 +23,7 @@ class Windowed_learning_pipeline:
         
 
         Порядок работы:
-        get_test() нужное число раз -> drop_dropout() -> get_test()
+        get_nxt() нужное число раз -> drop_dropout() -> get_test()
         '''
 
         self.train_size = _train_size
@@ -102,8 +102,8 @@ class Windowed_learning_pipeline:
         win_list = list(self.win)
         time_list = list(self.win_time)
 
-        train_dat, test_dat = win_list[:self.train_size], win_list[self.win_size:]
-        train_time, test_time = time_list[:self.train_size], time_list[self.win_size:]
+        train_dat, test_dat = win_list[:self.win_train_size], win_list[self.win_train_size:]
+        train_time, test_time = time_list[:self.win_train_size], time_list[self.win_train_size:]
 
         df_train = pd.DataFrame(data = train_dat,
                                 index = train_time,
