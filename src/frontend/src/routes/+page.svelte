@@ -125,8 +125,8 @@
     <div class="mx-auto max-w-6xl py-6">
         <section class="py-12">
             <div class="grid grid-cols-2 gap-4">
-                <!--<div class="flex p-6 bg-neutral-900 rounded-lg flex-col gap-2">
-                    <h1 class="text-xl">Выбор стратегии</h1>
+                <div class="flex p-6 bg-neutral-900 rounded-lg flex-col gap-2">
+                    <h1 class="text-xl">Выбранная стратегия</h1>
                     <div>
                         <table class="min-w-full table-auto">
                             <thead>
@@ -153,8 +153,8 @@
                             </tbody>
                         </table>
                     </div>
-                </div>-->
-                <div class="flex p-6 bg-neutral-900 rounded-lg flex-col gap-2">
+                </div>
+                <div class="flex p-4 bg-neutral-900 rounded-lg flex-col gap-2">
                     <h1 class="text-xl">Метрики</h1>
                     <div class="flex flex-col min-w-full gap-2">
                         <div class="flex flex-row justify-between">
