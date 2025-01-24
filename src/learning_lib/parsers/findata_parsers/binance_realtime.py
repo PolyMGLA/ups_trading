@@ -143,7 +143,7 @@ class BinanceRealtimeParser(Thread):
                 time.sleep(1)
                 continue
             print(Style.BRIGHT + "parsing candle:", dt, "-", next, Style.RESET_ALL)
-            for tick_symbol in tqdm(self.tick):
+            for tick_symbol in (t := tqdm(self.tick)):
                 df = request_candles(
                     FUT_API_PATH,
                     f"src/data/{tick_symbol}.csv",
@@ -154,6 +154,7 @@ class BinanceRealtimeParser(Thread):
                     EXPORT=False
                 )
                 self.parsed[tick_symbol] = pd.concat([self.parsed[tick_symbol], df])
+            t.close()
             if self.EXPORT:
                 self._export()
 
