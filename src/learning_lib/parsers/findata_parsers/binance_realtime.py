@@ -39,7 +39,8 @@ def request_candles(API_PATH: str,
                     symbol: str,
                     interval: str,
                     startTime: str,
-                    endTime: str) -> pd.DataFrame:
+                    endTime: str,
+                    EXPORT: bool = False) -> pd.DataFrame:
     '''
     API_PATH - откуда будем парсить
     symbol - наименование валюты
@@ -100,7 +101,7 @@ def request_candles(API_PATH: str,
     for f in ['openTime', 'closeTime']:
         candles[f] = candles[f].apply(lambda x: datetime.fromtimestamp(1e-3 * x, tz=utc))
 
-    candles.to_csv(csv_save_pth, index=False)
+    if EXPORT: candles.to_csv(csv_save_pth, index=False)
     time.sleep(1)
     return candles
 
@@ -130,6 +131,7 @@ class BinanceRealtimeParser(Thread):
 
     def run(self):
         if not os.path.exists("src/data"):
+            print(Fore.RED + f"src/data not found, creating..", Style.RESET_ALL)
             os.mkdir("src/data")
 
         next = datetime.now()
@@ -149,6 +151,7 @@ class BinanceRealtimeParser(Thread):
                     '5m',
                     (dt - timedelta(minutes=6) - TIMEZONE).isoformat(),
                     (dt - timedelta(minutes=1) - TIMEZONE).isoformat(),
+                    EXPORT=False
                 )
                 self.parsed[tick_symbol] = pd.concat([self.parsed[tick_symbol], df])
             if self.EXPORT:
@@ -178,6 +181,7 @@ class BinanceRealtimeParser(Thread):
             tickers = self.tick
 
         if not os.path.exists("src/data"):
+            print(Fore.RED + f"src/data not found, creating..", Style.RESET_ALL)
             os.mkdir("src/data")
         
         for el in tickers:
@@ -196,6 +200,7 @@ class BinanceRealtimeParser(Thread):
             tickers = self.tick
 
         if not os.path.exists("src/data"):
+            print(Fore.RED + f"src/data not found, creating..", Style.RESET_ALL)
             os.mkdir("src/data")
         
         for el in tickers:
@@ -205,6 +210,6 @@ if __name__ == "__main__":
     with open("src/learning_lib/parsers/findata_parsers/tokens_names.txt") as f:
         tick = [line.strip() for line in f.readlines()]
     parser = BinanceRealtimeParser()
-    parser.init(tick, EXPORT=False)
+    parser.init(tick, EXPORT=True)
     #True, чтобы автоматически сохранять данные после каждой итерации
     parser.start()
