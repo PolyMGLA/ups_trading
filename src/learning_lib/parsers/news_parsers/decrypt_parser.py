@@ -53,7 +53,7 @@ def DecryptParser(FILENAME, NUM):
     }
     Если ссылка уже присутствует в json, парсинг прекращается
     """
-    COINDESK_ADDR = "https://decrypt.co"
+    DECRYPT_ADDR = "https://decrypt.co"
     global parsed
     with open(FILENAME, "r") as f: p = json.load(f)
     parsed = { }
@@ -66,7 +66,7 @@ def DecryptParser(FILENAME, NUM):
     driver = webdriver.Firefox()
     driver.set_page_load_timeout(30)
     try:
-        driver.get(COINDESK_ADDR + "/news")
+        driver.get(DECRYPT_ADDR + "/news")
     except selenium.common.exceptions.TimeoutException as e:
         pass
     btn = None
@@ -90,7 +90,7 @@ def DecryptParser(FILENAME, NUM):
     for el in soup.find_all("div", { "class": "flex flex-col border-l-[0.5px] ml-0.5 border-neutral-300 pl-2 md:pl-3 xl:pl-4 pt-7" }):
         # print(el)
         # print(el.find("a", { "class": "linkbox__overlay" }, href=True))
-        hrefs.append(COINDESK_ADDR + el.find("a", { "class": "linkbox__overlay" }, href=True)["href"])
+        hrefs.append(DECRYPT_ADDR + el.find("a", { "class": "linkbox__overlay" }, href=True)["href"])
     print("parsing..")
     
     try:
