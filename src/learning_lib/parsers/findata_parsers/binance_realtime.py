@@ -168,26 +168,30 @@ def binance_parse_candles_all_symbols(transaction_types_apis, symbols_names, sta
         print(f"Успешно сохранён {candle_save_pth}{year}.csv")
         print('\n')
 
-def process_tick_joblib(tick_symbol):
-    request_candles(
-        FUT_API_PATH,
-        f"C:\\Python\\Github\\Vallet_Courses_Loader\\data\\{tick_symbol}.csv",
-        [tick_symbol],
-        '5m',
-        '1.1.2022',
-        '1.10.2025',
-    )
-# Parallel(n_jobs=10)(delayed(process_tick_joblib)(tick_symbol) for tick_symbol in tick)
-
-with open("src/learning_lib/parsers/findata_parsers/tokens_names.txt") as f:
-    tick = [line.strip() for line in f.readlines()]
+tick = []
 
 class BinanceRealtimeParser(Thread):
+    """
+    Процесс парсинга данных с Binance в реальном времени
+    Перед запуском через .start() необходимо вызвать .init()
+    """
     running = True
-    parsed = { ticker : pd.DataFrame(columns=['openTime', 'closeTime', 'open', 'high', 'low', 'close', 'baseVolume',
-       'quoteVolume', 'numTrades', 'takerBuyBaseVolume',
-       'takerBuyQuoteVolume']) for ticker in tick }
+    tick = []
+    parsed = { }
     EXPORT = True
+
+    def init(self, tick, EXPORT=False):
+        """
+        Инициализирует список токенов и флаг экспорта
+        :param tick: Отслеживаемые тикеры
+        :param EXPORT: True, чтобы автоматически сохранять данные после каждой итерации
+        """
+        self.tick = tick
+        self.parsed = { ticker : pd.DataFrame(columns=['openTime', 'closeTime', 'open', 'high', 'low', 'close', 'baseVolume',
+            'quoteVolume', 'numTrades', 'takerBuyBaseVolume',
+            'takerBuyQuoteVolume']) for ticker in tick }
+        self.EXPORT = EXPORT
+
     def run(self):
         if not os.path.exists("src/data"):
             os.mkdir("src/data")
@@ -201,7 +205,7 @@ class BinanceRealtimeParser(Thread):
                 time.sleep(1)
                 continue
             print(dt, next)
-            for tick_symbol in tqdm(tick):
+            for tick_symbol in tqdm(self.tick):
                 df = request_candles(
                     FUT_API_PATH,
                     f"src/data/{tick_symbol}.csv",
@@ -213,6 +217,20 @@ class BinanceRealtimeParser(Thread):
                 self.parsed[tick_symbol] = pd.concat([self.parsed[tick_symbol], df])
             if self.EXPORT:
                 self._export()
+
+    def fetch(self):
+        """
+        Возвращает распаршенные данные и очищает их локально
+        """
+        p = self.parsed.copy()
+        self.parsed = { }
+        return p
+
+    def stop(self):
+        """
+        Просто останавливает выполнение потока
+        """
+        self.running = False
     
     def _import(self, tickers=None):
         """
@@ -220,7 +238,7 @@ class BinanceRealtimeParser(Thread):
         :param tickers: список требуемых тикеров. Если None, импортируются все
         """
         if tickers is None:
-            tickers = tick
+            tickers = self.tick
 
         if not os.path.exists("src/data"):
             os.mkdir("src/data")
@@ -237,7 +255,7 @@ class BinanceRealtimeParser(Thread):
         :param tickers: список требуемых тикеров. Если None, сохранятся все
         """
         if tickers is None:
-            tickers = tick
+            tickers = self.tick
 
         if not os.path.exists("src/data"):
             os.mkdir("src/data")
@@ -246,5 +264,9 @@ class BinanceRealtimeParser(Thread):
             self.parsed[el].to_csv(f"src/data/{el}.csv", index=False)
 
 if __name__ == "__main__":
+    with open("src/learning_lib/parsers/findata_parsers/tokens_names.txt") as f:
+        tick = [line.strip() for line in f.readlines()]
     parser = BinanceRealtimeParser()
+    parser.init(tick, EXPORT=False)
+    #True, чтобы автоматически сохранять данные после каждой итерации
     parser.start()
