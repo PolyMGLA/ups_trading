@@ -37,6 +37,7 @@ class CoinDeskRealTimeParser(Thread):
         self.EXPORT = EXPORT
 
     def run(self):
+        print(Fore.YELLOW + "started coindesk realtime parser", Style.RESET_ALL)
         while self.running:
             url = self.get_page_last_url()
             if self.last_url != url:

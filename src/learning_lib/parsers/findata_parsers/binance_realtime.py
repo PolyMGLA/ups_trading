@@ -130,13 +130,14 @@ class BinanceRealtimeParser(Thread):
         self.EXPORT = EXPORT
 
     def run(self):
+        print(Fore.YELLOW + "started binance realtime parser", Style.RESET_ALL)
         if not os.path.exists("src/data"):
             print(Fore.RED + f"src/data not found, creating..", Style.RESET_ALL)
             os.mkdir("src/data")
 
         next = datetime.now()
         while self.running:
-            dt = datetime.now()
+            dt = datetime.now().replace(microsecond=0)
             if dt >= next:
                 next = dt + timedelta(minutes=5)
             else:
