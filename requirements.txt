@@ -157,3 +157,4 @@ websockets==14.1
 widgetsnbextension==4.0.13
 wsproto==1.2.0
 yarl==1.18.3
+openai==1.59.7

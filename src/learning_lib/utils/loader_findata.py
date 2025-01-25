@@ -8,7 +8,7 @@ class Finloader:
     '''
     def __init__(self, path: str):
         '''
-        path - path to derectory
+        path - path to clear_directory directory
         '''
         self.path = path
         self.iteration_list = []
