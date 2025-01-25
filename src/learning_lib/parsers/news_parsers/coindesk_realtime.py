@@ -5,6 +5,9 @@ import os
 import os.path
 import tqdm
 import time
+import colorama
+colorama.init()
+from colorama import Fore, Back, Style
 
 from joblib import Parallel, delayed
 
@@ -23,16 +26,27 @@ class CoinDeskRealTimeParser(Thread):
     """
     last_url = None
     running = True
+    EXPORT = False
     parsed = { }
 
+    def init(self,
+             EXPORT: bool = False) -> None:
+        """
+        Указать настройки парсера
+        """
+        self.EXPORT = EXPORT
+
     def run(self):
+        print(Fore.YELLOW + "started coindesk realtime parser", Style.RESET_ALL)
         while self.running:
             url = self.get_page_last_url()
             if self.last_url != url:
-                print("parsing:", url)
+                print(Style.BRIGHT + "parsing:", url, Style.RESET_ALL)
                 self.last_url = url
                 v = self.parse_url(url)
                 self.parsed = { **self.parsed, **v }
+                if self.EXPORT:
+                    self._export("coindesk_news.json")
             time.sleep(10)
     
     def get_page_last_url(self) -> str:
@@ -76,7 +90,7 @@ class CoinDeskRealTimeParser(Thread):
                 text += el.getText() + "\n"
             return { h: [caption, date + " " + tm, text] }
         except Exception as e:
-            print(e)
+            print(Fore.RED + str(e) + Style.RESET_ALL)
             return { }
 
     def fetch_n_clear(self) -> dict[str, list[str]]:
@@ -103,12 +117,18 @@ class CoinDeskRealTimeParser(Thread):
         :param FILENAME: имя входного файла
         """
         if not os.path.exists(FILENAME):
-            print("file not found, creating..")
+            print(Fore.RED + "file not found, creating.." + Style.RESET_ALL)
             with open(FILENAME, "w") as f: f.write("{}")
-        with open(FILENAME, "r") as f:
-            data = json.load(f)
-        data = dict(reversed(data.items()))
-        self.parsed = { **self.parsed, **data }
+        print("importing data from", FILENAME, end=" ")
+        try:
+            with open(FILENAME, "r") as f:
+                data = json.load(f)
+            data = dict(reversed(data.items()))
+            self.parsed = { **self.parsed, **data }
+        except Exception as e:
+            print(Fore.RED + str(e) + Style.RESET_ALL)  
+        else:
+            print(Fore.GREEN + "done" + Style.RESET_ALL)
 
     def _export(self, FILENAME) -> None:
         """
@@ -116,7 +136,7 @@ class CoinDeskRealTimeParser(Thread):
         :param FILENAME: имя выходного файла. Если он не существует, будет создан
         """
         if not os.path.exists(FILENAME):
-            print("file not found, creating..")
+            print(Fore.RED + "file not found, creating.." + Style.RESET_ALL)
             with open(FILENAME, "w") as f: f.write("{}")
         with open(FILENAME, "w") as f:
             json.dump(
