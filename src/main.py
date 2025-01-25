@@ -5,7 +5,10 @@ from learning_lib.parsers.news_parsers.coindesk_realtime import CoinDeskRealTime
 from learning_lib.models.lstm import LSTMModel
 from learning_lib.models.nlp import NLPModel
 from learning_lib.models.merge_predictions import PredictionMerger
+from learning_lib.utils.strategy_update import StrategyUpdater
 from server import Server
+import numpy as np
+import torch as pt
 
 import time
 
@@ -20,6 +23,7 @@ coin_parser = CoinDeskRealTimeParser()
 lstm_model = LSTMModel()
 nlp_model = NLPModel()
 merger = PredictionMerger()
+updater = StrategyUpdater()
 server = Server()
 
 if __name__ == "__main__":

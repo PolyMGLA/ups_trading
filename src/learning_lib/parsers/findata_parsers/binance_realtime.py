@@ -163,6 +163,7 @@ class BinanceRealtimeParser(Thread):
                 t.update(1)
                 t.refresh()
             t.close()
+            tqdm._instances.clear()
             if self.EXPORT:
                 self._export()
 
@@ -171,7 +172,9 @@ class BinanceRealtimeParser(Thread):
         Возвращает распаршенные данные и очищает их локально
         """
         p = self.parsed.copy()
-        self.parsed = { }
+        self.parsed = { ticker : pd.DataFrame(columns=['openTime', 'closeTime', 'open', 'high', 'low', 'close', 'baseVolume',
+            'quoteVolume', 'numTrades', 'takerBuyBaseVolume',
+            'takerBuyQuoteVolume']) for ticker in self.tick }
         return p
 
     def stop(self) -> None:

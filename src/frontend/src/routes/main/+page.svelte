@@ -1,18 +1,11 @@
 <script>
     // Логика обработки (в данном случае, переход по ссылке можно оставить без изменений)
     function redirectToPage() {
-      window.location.href = '/';
+      window.location.href = '/screener';
     }
   </script>
   
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #30313A;
-      color: #30313A;
-    }
-  
+  <style>  
     .welcome-page {
       display: flex;
       flex-direction: column;

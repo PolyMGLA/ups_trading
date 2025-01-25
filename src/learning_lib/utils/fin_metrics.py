@@ -165,3 +165,27 @@ class FinCalculations:
         metrics_dict["Max Drawdown"] = FinCalculations.maxDrawdown(alpha, returns)
         metrics_dict["Turnover"] = FinCalculations.turnover(alpha)
         return pd.DataFrame([metrics_dict])
+
+    @staticmethod
+    def metrics_dict(
+        alpha: pd.DataFrame,
+        returns: pd.DataFrame
+    ) -> dict[str, dict[str, float]]:
+        '''
+        Метод для расчета всех основных метрик альфа-стратегии:
+        - Доходность (PnL)
+        - Коэффициент Шарпа
+        - Максимальная просадка
+        - Оборот (turnover)
+        
+        :param alpha: Датафрейм с весами альфа-стратегии.
+        :param returns: Датафрейм с доходностью активов.
+        :return: Датафрейм с рассчитанными метриками.
+        '''
+        metrics_dict = {}
+        metrics_dict["pnl"] = str(FinCalculations.pnl(alpha, returns))
+        metrics_dict["sharpe"] = str(FinCalculations.sharpe(alpha, returns))
+        metrics_dict["profit_margin"] = str(FinCalculations.profit_margin(alpha, returns))
+        metrics_dict["max_drawdown"] = str(FinCalculations.maxDrawdown(alpha, returns))
+        metrics_dict["turnover"] = str(FinCalculations.turnover(alpha))
+        return { "data": metrics_dict }

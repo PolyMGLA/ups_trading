@@ -67,10 +67,10 @@ class FinCalculationsTensor:
         :return: tensor просадок для каждого временного интервала.
         '''
         return (
-            FinCalculationsTensor.pnl_tensor(alpha, returns).cummax() - \
+            FinCalculationsTensor.pnl_tensor(alpha, returns).cummax(dim=0) - \
             FinCalculationsTensor.pnl_tensor(alpha, returns)
         ) / (
-            FinCalculationsTensor.pnl_tensor(alpha, returns).cummax() + 1
+            FinCalculationsTensor.pnl_tensor(alpha, returns).cummax(dim=0) + 1
         )
     
     @staticmethod
@@ -86,7 +86,7 @@ class FinCalculationsTensor:
         :param returns: tensor с доходностью активов.
         :return: Максимальная просадка.
         '''
-        return FinCalculationsTensor.drawdown_vec(alpha, returns).max()
+        return FinCalculationsTensor.drawdown_tensor(alpha, returns).max()
 
     @staticmethod
     def turnover_tensor(
@@ -99,7 +99,7 @@ class FinCalculationsTensor:
         :param alpha: tensor с весами альфа-стратегии.
         :return: tensor изменений весов по каждому временному интервалу.
         '''
-        alpha1=pd.DataFrame(alpha.numpy())
+        alpha1 = pd.DataFrame(alpha.numpy())
         return pt.tensor((alpha1 - alpha1.shift()).abs().sum(axis=1))
     
     @staticmethod
@@ -112,7 +112,7 @@ class FinCalculationsTensor:
         :param alpha: tensor с весами альфа-стратегии.
         :return: Среднее изменение (turnover) весов стратегии.
         '''
-        return FinCalculationsTensor.turnover_vec(alpha).mean()
+        return FinCalculationsTensor.turnover_tensor(alpha).mean()
     
     @staticmethod
     def decay(
@@ -126,7 +126,7 @@ class FinCalculationsTensor:
         :param win: Параметр окна для экспоненциального сглаживания.
         :return: Альфа после сглаживания.
         '''
-        alpha1=pd.DataFrame(alpha.numpy())
+        alpha1 = pd.DataFrame(alpha.numpy())
         return pt.tensor(alpha1.ewm(span=win).mean())
     
     @staticmethod
@@ -141,8 +141,8 @@ class FinCalculationsTensor:
         :param returns: tensor с доходностью активов.
         :return: Значение Profit Margin.
         '''
-        pnl = FinCalculationsTensor.pnl_vec(alpha, returns)
-        tvr = FinCalculationsTensor.turnover_vec(alpha)
+        pnl = FinCalculationsTensor.pnl_tensor(alpha, returns)
+        tvr = FinCalculationsTensor.turnover_tensor(alpha)
         return pnl.mean() / tvr.mean() if tvr.mean() != 0 else np.nan
 
     @staticmethod
