@@ -113,27 +113,31 @@ class BinanceRealtimeParser(Thread):
     running = True
     tick = []
     parsed = { }
+    dir = ""
     EXPORT = True
 
     def init(self,
              tick: list[str],
-             EXPORT: bool = False) -> None:
+             EXPORT: bool = False,
+             dir: str = "src/data") -> None:
         """
         Инициализирует список токенов и флаг экспорта
         :param tick: Отслеживаемые тикеры
         :param EXPORT: True, чтобы автоматически сохранять данные после каждой итерации
+        :param dir: папка для экспорта
         """
         self.tick = tick
         self.parsed = { ticker : pd.DataFrame(columns=['openTime', 'closeTime', 'open', 'high', 'low', 'close', 'baseVolume',
             'quoteVolume', 'numTrades', 'takerBuyBaseVolume',
             'takerBuyQuoteVolume']) for ticker in tick }
         self.EXPORT = EXPORT
+        self.dir = dir
 
     def run(self):
         print(Fore.YELLOW + "started binance realtime parser", Style.RESET_ALL)
-        if not os.path.exists("src/data"):
-            print(Fore.RED + f"src/data not found, creating..", Style.RESET_ALL)
-            os.mkdir("src/data")
+        if not os.path.exists(self.dir):
+            print(Fore.RED + f"{self.dir} not found, creating..", Style.RESET_ALL)
+            os.mkdir(self.dir)
 
         next = datetime.now()
         while self.running:
@@ -144,10 +148,11 @@ class BinanceRealtimeParser(Thread):
                 time.sleep(1)
                 continue
             print(Style.BRIGHT + "parsing candle:", dt, "-", next, Style.RESET_ALL)
-            for tick_symbol in (t := tqdm(self.tick)):
+            t = tqdm(self.tick, file=sys.stdout)
+            for tick_symbol in self.tick:
                 df = request_candles(
                     FUT_API_PATH,
-                    f"src/data/{tick_symbol}.csv",
+                    f"{self.dir}/{tick_symbol}.csv",
                     [tick_symbol],
                     '5m',
                     (dt - timedelta(minutes=6) - TIMEZONE).isoformat(),
@@ -155,6 +160,8 @@ class BinanceRealtimeParser(Thread):
                     EXPORT=False
                 )
                 self.parsed[tick_symbol] = pd.concat([self.parsed[tick_symbol], df])
+                t.update(1)
+                t.refresh()
             t.close()
             if self.EXPORT:
                 self._export()
@@ -182,15 +189,21 @@ class BinanceRealtimeParser(Thread):
         if tickers is None:
             tickers = self.tick
 
-        if not os.path.exists("src/data"):
-            print(Fore.RED + f"src/data not found, creating..", Style.RESET_ALL)
-            os.mkdir("src/data")
-        
-        for el in tickers:
-            if not os.path.exists(f"src/data/{el}.csv"):
-                print(Fore.RED + f"src/data/{el}.csv not found", Style.RESET_ALL)
-                continue
-            self.parsed[el] = pd.read_csv(f"src/data/{el}.csv")
+        if not os.path.exists(self.dir):
+            print(Fore.RED + f"{self.dir} not found, creating..", Style.RESET_ALL)
+            os.mkdir(self.dir)
+
+        print(f"importing data from {self.dir}", end=" ")
+        try:
+            for el in tickers:
+                if not os.path.exists(f"{self.dir}/{el}.csv"):
+                    print(Fore.RED + f"{self.dir}/{el}.csv not found", Style.RESET_ALL)
+                    continue
+                self.parsed[el] = pd.read_csv(f"{self.dir}/{el}.csv")
+        except Exception as e:
+            print(Fore.RED + str(e) + Style.RESET_ALL)
+        else:
+            print(Fore.GREEN + "done" + Style.RESET_ALL)
 
     def _export(self,
                 tickers: list[str] = None) -> None:
@@ -201,12 +214,12 @@ class BinanceRealtimeParser(Thread):
         if tickers is None:
             tickers = self.tick
 
-        if not os.path.exists("src/data"):
-            print(Fore.RED + f"src/data not found, creating..", Style.RESET_ALL)
-            os.mkdir("src/data")
+        if not os.path.exists(self.dir):
+            print(Fore.RED + f"{self.dir} not found, creating..", Style.RESET_ALL)
+            os.mkdir(self.dir)
         
         for el in tickers:
-            self.parsed[el].to_csv(f"src/data/{el}.csv", index=False)
+            self.parsed[el].to_csv(f"{self.dir}/{el}.csv", index=False)
 
 if __name__ == "__main__":
     with open("src/learning_lib/parsers/findata_parsers/tokens_names.txt") as f:

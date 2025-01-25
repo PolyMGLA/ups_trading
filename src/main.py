@@ -10,9 +10,10 @@ from server import Server
 import time
 
 #TODO: 
-# Инициализация парсеров
-# Инициализация моделей
-# Поддержка сервера
+# Инициализация парсеров done
+# Инициализация моделей done
+# Поддержка сервера done
+# Поток передачи данных с моделей на сервер
 
 binance_parser = BinanceRealtimeParser()
 coin_parser = CoinDeskRealTimeParser()
@@ -26,6 +27,9 @@ if __name__ == "__main__":
         tick = [line.strip() for line in f.readlines()]
     binance_parser.init(tick, EXPORT=True)
     coin_parser.init(EXPORT=True)
+
+    coin_parser._import("coindesk_news.json")
+    binance_parser._import(None)
 
     server.start()
     coin_parser.start()

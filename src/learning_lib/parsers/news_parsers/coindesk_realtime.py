@@ -119,10 +119,16 @@ class CoinDeskRealTimeParser(Thread):
         if not os.path.exists(FILENAME):
             print(Fore.RED + "file not found, creating.." + Style.RESET_ALL)
             with open(FILENAME, "w") as f: f.write("{}")
-        with open(FILENAME, "r") as f:
-            data = json.load(f)
-        data = dict(reversed(data.items()))
-        self.parsed = { **self.parsed, **data }
+        print("importing data from", FILENAME, end=" ")
+        try:
+            with open(FILENAME, "r") as f:
+                data = json.load(f)
+            data = dict(reversed(data.items()))
+            self.parsed = { **self.parsed, **data }
+        except Exception as e:
+            print(Fore.RED + str(e) + Style.RESET_ALL)  
+        else:
+            print(Fore.GREEN + "done" + Style.RESET_ALL)
 
     def _export(self, FILENAME) -> None:
         """
