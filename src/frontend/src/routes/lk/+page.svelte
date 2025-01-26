@@ -27,7 +27,7 @@
       max-width: 1200px;
       margin: 0 auto;
       background-color: #30313A;
-      color: #30313A;
+      color: white;
     }
   
     .account-header {
@@ -35,8 +35,7 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 30px;
-      background-color: #30313A;
-      color: #30313A;
+      color: white;
     }
   
     .user-info {
