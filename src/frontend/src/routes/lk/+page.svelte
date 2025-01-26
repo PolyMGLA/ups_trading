@@ -19,13 +19,15 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background-color: #30313A;
-      color: white;
+      color: #30313A;
     }
   
     .account-page {
       padding: 20px;
       max-width: 1200px;
       margin: 0 auto;
+      background-color: #30313A;
+      color: #30313A;
     }
   
     .account-header {
@@ -33,6 +35,8 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 30px;
+      background-color: #30313A;
+      color: #30313A;
     }
   
     .user-info {
@@ -52,6 +56,7 @@
       font-size: 18px;
       font-weight: bold;
       color: #f0f0f0;
+      background-color: #30313A;
     }
   
     .logout-btn {
@@ -117,6 +122,7 @@
     .strategy-name {
       font-weight: bold;
       color: #f0f0f0;
+      background-color: #30313A;
     }
   
     .strategy-result {
