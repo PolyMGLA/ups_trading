@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { Chart } from "chart.js/auto";
+    import { goto } from "$app/navigation";
 
     const email = "example@example.com";
     const phoneNumber = "+1234567890";
@@ -27,6 +28,10 @@
     let allocationChartCanvas: HTMLCanvasElement | null = null;
     let incomeChart;
     let allocationChart;
+
+    function navigateToLK() {
+        goto('/lk'); // Перенаправление на страницу lk.svelte
+    }
 
     onMount(async () => {
         let incomeChartLabels;
@@ -121,8 +126,19 @@
     });
 </script>
 
-<main class="bg-neutral-800 min-h-screen *:text-white">
+
+<main class="bg-neutral-800 min-h-screen text-white">
     <div class="mx-auto max-w-6xl py-6">
+        <!-- Добавленная кнопка -->
+        <div class="flex justify-end mb-4">
+            <button
+                on:click={navigateToLK}
+                class="bg-teal-500 hover:bg-teal-400 text-neutral-900 font-semibold px-6 py-2 rounded-lg border border-teal-700 shadow-lg transition-all"
+            >
+                Подключиться
+            </button>
+        </div>
+
         <section class="py-12">
             <div class="grid grid-cols-2 gap-4">
                 <div class="flex p-6 bg-neutral-900 rounded-lg flex-col gap-2">
@@ -143,9 +159,9 @@
                                     <td class="px-2 py-1">{index + 1}</td>
                                     <td class="px-2 py-1">{name}</td>
                                     <td class="px-2 py-1">
-                                    <div class="w-full h-4 bg-neutral-800 rounded-full">
-                                        <div style="width: { rating }%;" class="{ color } h-full rounded-full"></div>
-                                    </div>
+                                        <div class="w-full h-4 bg-neutral-800 rounded-full">
+                                            <div style="width: { rating }%;" class="{ color } h-full rounded-full"></div>
+                                        </div>
                                     </td>
                                     <td class="px-2 py-1">{cost}</td>
                                 </tr>
@@ -184,6 +200,7 @@
                     <canvas bind:this={ incomeChartCanvas } id="incomeChart"></canvas>
                 </div>
                 <div class="flex p-6 bg-neutral-900 rounded-lg flex-col gap-2">
+
                     <h1 class="text-xl text-white">Распределение средств по активам</h1>
                     <canvas bind:this={ allocationChartCanvas } id="allocationChart"></canvas>
                 </div>

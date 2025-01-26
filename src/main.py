@@ -52,37 +52,28 @@ if __name__ == "__main__":
     else:
         print(f"importing data from src/data" + Fore.YELLOW, "skip", Style.RESET_ALL)
     
+    server.start()
+
     num = 10
 
     try:
         findata = concat(binance_parser.request(None), tick)
-        # findata.to_csv("findata.csv", index=False)
-
-        # findata = pd.read_csv("findata.csv")
-        # print(findata)
     except Exception as e:
         print(f"parsing last {num} candles..", Fore.RED + "error")
         print(str(e) + Style.RESET_ALL)
     else:
         print(f"parsing last {num} candles..", Fore.GREEN + "done" + Style.RESET_ALL)
 
-    
-    server.start()
     coin_parser.start()
     binance_parser.start()
 
     time.sleep(1)
 
     while True:
-        # удалить первую строку и добавить новую
         if not binance_parser.done:
             time.sleep(1)
             continue
         d = concat(binance_parser.fetch(), tick)
-        # d.to_csv("d.csv", index=False)
-        # d = pd.read_csv("d.csv")
-        # print(d)
-        # print(d.info())
         findata = pd.concat([findata, d])
         findata = findata.iloc[1:]
         print(findata)
