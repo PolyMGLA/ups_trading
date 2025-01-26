@@ -64,6 +64,7 @@
       border: none;
       border-radius: 4px;
       font-size: 14px;
+      color: #121212;
     }
   
     .filter-button {

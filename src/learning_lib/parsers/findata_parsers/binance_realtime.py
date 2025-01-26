@@ -105,6 +105,20 @@ def request_candles(API_PATH: str,
     time.sleep(1)
     return candles
 
+cols = ["open", "high", "low", "close", "baseVolume", "quoteVolume",
+        "numTrades", "takerBuyBaseVolume", "takerBuyQuoteVolume"]
+
+def concat(data: dict[str, pd.DataFrame], tick: list[str]) -> pd.DataFrame:
+    columns = []
+    for el in tick:
+        for col in cols:
+            columns.append(el + "_" + col)
+    findata = pd.DataFrame(columns=columns)
+    for el in tick:
+        for col in cols:
+            findata[el + "_" + col] = data[el][col]
+    return findata
+
 class BinanceRealtimeParser(Thread):
     """
     Процесс парсинга данных с Binance в реальном времени
@@ -115,6 +129,7 @@ class BinanceRealtimeParser(Thread):
     parsed = { }
     dir = ""
     EXPORT = True
+    done = False
 
     def init(self,
              tick: list[str],
@@ -155,8 +170,8 @@ class BinanceRealtimeParser(Thread):
                     f"{self.dir}/{tick_symbol}.csv",
                     [tick_symbol],
                     '5m',
-                    (dt - timedelta(minutes=6) - TIMEZONE).isoformat(),
-                    (dt - timedelta(minutes=1) - TIMEZONE).isoformat(),
+                    (dt - timedelta(minutes=5) - TIMEZONE).isoformat(),
+                    (dt - TIMEZONE).isoformat(),
                     EXPORT=False
                 )
                 self.parsed[tick_symbol] = pd.concat([self.parsed[tick_symbol], df])
@@ -166,6 +181,7 @@ class BinanceRealtimeParser(Thread):
             tqdm._instances.clear()
             if self.EXPORT:
                 self._export()
+            self.done = True
 
     def fetch(self) -> dict[str, pd.DataFrame]:
         """
@@ -175,6 +191,7 @@ class BinanceRealtimeParser(Thread):
         self.parsed = { ticker : pd.DataFrame(columns=['openTime', 'closeTime', 'open', 'high', 'low', 'close', 'baseVolume',
             'quoteVolume', 'numTrades', 'takerBuyBaseVolume',
             'takerBuyQuoteVolume']) for ticker in self.tick }
+        self.done = False
         return p
 
     def stop(self) -> None:
@@ -223,6 +240,29 @@ class BinanceRealtimeParser(Thread):
         
         for el in tickers:
             self.parsed[el].to_csv(f"{self.dir}/{el}.csv", index=False)
+
+    def request(self,
+                tickers: list[str] = None,
+                num: int = 10) -> dict[str, pd.DataFrame]:
+        if tickers is None:
+            tickers = self.tick
+
+        res = { ticker : pd.DataFrame(columns=['openTime', 'closeTime', 'open', 'high', 'low', 'close', 'baseVolume',
+            'quoteVolume', 'numTrades', 'takerBuyBaseVolume',
+            'takerBuyQuoteVolume']) for ticker in tickers }
+        dt = datetime.now()
+        for tick_symbol in tqdm(tickers):
+            df = request_candles(
+                FUT_API_PATH,
+                f"{self.dir}/{tick_symbol}.csv",
+                [tick_symbol],
+                '5m',
+                (dt - timedelta(minutes=5 * num) - TIMEZONE).isoformat(),
+                (dt - TIMEZONE).isoformat(),
+                EXPORT=False
+            )
+            res[tick_symbol] = df
+        return res
 
 if __name__ == "__main__":
     with open("src/learning_lib/parsers/findata_parsers/tokens_names.txt") as f:
