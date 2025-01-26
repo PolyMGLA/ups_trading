@@ -16,6 +16,9 @@ import numpy as np
 import torch as pt
 import pandas as pd
 
+import warnings
+warnings.filterwarnings("ignore")
+
 IMPORT_FINDATA = False
 IMPORT_NEWSDATA = True
 
@@ -77,6 +80,6 @@ if __name__ == "__main__":
         findata = pd.concat([findata, d])
         findata = findata.iloc[1:]
         print(findata)
-        # pred = lstm_model.predict(findata)
-        # print(pred)
+        pred = lstm_model.predict(findata)
+        print(pred)
         # ждем следующей свечи
