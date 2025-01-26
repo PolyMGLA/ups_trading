@@ -6,7 +6,7 @@
     let profit = 12000;
   
     const strategies = [
-      { name: "Стратегия 1", result: 12, positive: true },
+      { name: "Anti-mainstream 1", result: 12, positive: true },
     ];
   
     function logout() {
