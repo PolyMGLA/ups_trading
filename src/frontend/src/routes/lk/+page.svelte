@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
   
     let username = "Иван Смирнов";
-    let balance = 100000;
+    let balance = 112000;
     let profit = 12000;
   
     const strategies = [
@@ -14,7 +14,14 @@
     }
   </script>
   
-  <style>  
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #30313A;
+      color: white;
+    }
+  
     .account-page {
       padding: 20px;
       max-width: 1200px;
@@ -150,7 +157,7 @@
   
     <div class="balance-section">
       <p class="balance-text">
-        Ваш баланс: {balance.toLocaleString()} ₽ <span class="profit {profit > 0 ? 'green' : 'red'}">({profit > 0 ? '+' : ''}{profit.toLocaleString()} ₽)</span>
+        Ваш баланс: $ {balance.toLocaleString()} <span class="profit {profit > 0 ? 'green' : 'red'}">({profit > 0 ? '+' : ''}$ {profit.toLocaleString()})</span>
       </p>
     </div>
   
