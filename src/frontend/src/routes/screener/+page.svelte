@@ -78,6 +78,9 @@
       cursor: pointer;
       border: 2px solid #7daea7e0;
       text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   
     .strategy-cards {
