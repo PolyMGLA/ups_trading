@@ -28,6 +28,7 @@ class CoinDeskRealTimeParser(Thread):
     running = True
     EXPORT = False
     parsed = { }
+    done = False
 
     def init(self,
              EXPORT: bool = False) -> None:
@@ -47,6 +48,7 @@ class CoinDeskRealTimeParser(Thread):
                 self.parsed = { **self.parsed, **v }
                 if self.EXPORT:
                     self._export("coindesk_news.json")
+                self.done = True
             time.sleep(10)
     
     def get_page_last_url(self) -> str:
@@ -93,13 +95,14 @@ class CoinDeskRealTimeParser(Thread):
             print(Fore.RED + str(e) + Style.RESET_ALL)
             return { }
 
-    def fetch_n_clear(self) -> dict[str, list[str]]:
+    def fetch(self) -> dict[str, list[str]]:
         """
         Очищает и возвращает накопленные данные
         :returns: словарь { href: [caption, date, text] }
         """
         p = self.parsed.copy()
         self.parsed = { }
+        self.done = False
         return p
 
     def stop(self, timeout=.0) -> None:
