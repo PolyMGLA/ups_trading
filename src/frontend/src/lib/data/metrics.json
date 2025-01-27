@@ -1,7 +1,7 @@
 {
     "data": {
-        "pnl": "-0.00010463229522624682",
-        "sharp": "-inf",
+        "pnl": "0",
+        "sharp": "nan",
         "profit_margin": "nan",
         "max_drawdown": "0.0",
         "turnover": "0.0"

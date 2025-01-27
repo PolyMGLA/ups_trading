@@ -50,7 +50,7 @@ class FinCalculations:
         :param returns: Датафрейм с доходностью активов.
         :return: Коэффициент Шарпа для данной альфа-стратегии.
         '''
-        return FinCalculations.pnl(alpha, returns).sum() / FinCalculations.pnl(alpha, returns).std()
+        return FinCalculations.pnl_vec(alpha, returns).sum() / FinCalculations.pnl_vec(alpha, returns).std()
     
     @staticmethod
     def drawdown_vec(

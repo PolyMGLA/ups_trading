@@ -64,7 +64,9 @@ if __name__ == "__main__":
     num = 10
 
     try:
-        findata = concat(binance_parser.request(None), tick)
+        # findata = concat(binance_parser.request(None), tick)
+        # findata.to_csv("findata.csv")
+        findata = pd.read_csv("findata.csv")
     except Exception as e:
         print(f"parsing last {num} candles..", Fore.RED + "error")
         print(str(e) + Style.RESET_ALL)
@@ -77,28 +79,36 @@ if __name__ == "__main__":
     time.sleep(1)
     сpred = np.array([.0 for i in range(120)], dtype=np.float32)
     merged = np.array([.0 for i in range(120)], dtype=np.float32)
+    df = pd.DataFrame(columns=[t + "_close" for t in tick])
+    d2 = pd.DataFrame([[1.0 for i in range(120)]], columns=[t + "_close" for t in tick], dtype=np.float32)
     while True:
         x = False
         if coin_parser.done:
             x = True
-            data = list(map(lambda x: x[2], list(coin_parser.fetch().values())))[0]
+            d = coin_parser.fetch()
+            data = list(map(lambda x: x[2], list(d.values())))[0]
             cpred = nlp_model.predict(data)
             print(cpred)
         if binance_parser.done:
             x = True
             data = binance_parser.fetch()
             d = concat(data, tick)
+            d.to_csv("data.csv")
             #print(d.info())
             #print([t + "_close" for t in tick])
-            df = pd.DataFrame(columns=[t + "_close" for t in tick])
-            for t in tick:
-                df[t + "_close"] = d[t + "_close"]
-            updater.update(merged, df.to_numpy()[0])
+            print("#" * 100)
+            print(d)
+            print(d2)
+            print("#" * 100)
+            print(df)
+            df[df.shape[0]] = pd.Series([(d[t + "_close"] / d2[t + "_close"])[0] for t in tick])
+            updater.update(merged, df.to_numpy())
+            d2 = concat(data, tick)
             findata = pd.concat([findata, d])
             findata = findata.iloc[1:]
             pred = lstm_model.predict(findata)
             #print(pred)
-            merged = merger.merge(pred, cpred)
+            merged = np.append(merged, merger.merge(pred, cpred)[0])
             print(merged)
         if not x:
             time.sleep(1)
