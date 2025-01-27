@@ -9,14 +9,13 @@ class CustomLoss2(nn.Module):
         super(CustomLoss2, self).__init__()
 
     def forward(self, input, target):
-
         alpha = normalize_tensor(neutralize_tensor(input))
-        return -(torch.mul(alpha, target).sum())/torch.sum(torch.mul(alpha, target),1).std()#*((input-target).abs().mean()**(-1))
+        return -(torch.mul(alpha, target).sum()) / torch.sum(torch.mul(alpha, target), 1).std()#*((input-target).abs().mean()**(-1))
 def neutralize_tensor(alpha):
-    return torch.sub(alpha.T,torch.mean(alpha,1)).T
+    return torch.sub(alpha.T, torch.mean(alpha, 1)).T
 
 def normalize_tensor(alpha):
-    return torch.div(alpha.T,torch.sum(alpha.abs(),1)).T
+    return torch.div(alpha.T, torch.sum(alpha.abs(), 1)).T
 
 def neutralize(alpha):
     return alpha.sub(
@@ -33,7 +32,7 @@ def scale(alpha):
     )
 
 def train_pipeline(epochs: int, criterion, optimizer, model, epochs_period: int, X, Y):
-    trainX,testX,trainY,testY = train_test_split(X,Y,shuffle=False,test_size=2000)
+    trainX, testX, trainY, testY = train_test_split(X,Y,shuffle=False,test_size=2000)
     X_train_tensors_final = torch.tensor(np.array(trainX),dtype=torch.float32).to('cuda')
     Y_train_tensors_final = torch.tensor(np.array(trainY),dtype=torch.float32).to('cuda')
     X_test_tensors_final = torch.tensor(np.array(testX),dtype=torch.float32).to('cuda')
@@ -50,10 +49,10 @@ def train_pipeline(epochs: int, criterion, optimizer, model, epochs_period: int,
         if epoch % epochs_period == 0:
             model.eval()
             val_outputs = model(X_test_tensors_final)
-            metr = criterion(val_outputs.detach(),Y_test_tensors_final.detach())
+            metr = criterion(val_outputs.detach(), Y_test_tensors_final.detach())
             print(metr)
             if metr < metr_best:
-                torch.save(model.state_dict(),"src/learning_lib/models/param_model.pth")
+                torch.save(model.state_dict(), "src/learning_lib/models/param_model.pth")
                 metr_best = metr
             model.train()
 
@@ -64,9 +63,9 @@ class MYLSTM(nn.Module):
         self.layer_dim = layer_dim
         self.lstm = nn.LSTM(input_dim, hidden_dim, layer_dim, batch_first=True)
         self.fc = nn.Linear(hidden_dim, 128)
-        self.dr=nn.Dropout(p=0.7)
-        self.fc2=nn.Linear(128,128)
-        self.fc3=nn.Linear(128,output_dim)
+        self.dr = nn.Dropout(p=0.7)
+        self.fc2 = nn.Linear(128,128)
+        self.fc3 = nn.Linear(128,output_dim)
 
     def forward(self, x, h0=None, c0=None):
         if h0 is None or c0 is None:
@@ -74,36 +73,41 @@ class MYLSTM(nn.Module):
             c0 = torch.zeros(self.layer_dim, x.size(0), self.hidden_dim).to(x.device)
         
         out, (hn, cn) = self.lstm(x, (h0, c0))
-        out=out[:, -1, :]
-        out=self.dr(out)
+        out = out[:, -1, :]
+        out = self.dr(out)
         out = self.fc(out)
-        out=self.dr(out)
-        out=self.fc2(out)
-        out=self.dr(out)
-        out=self.fc3(out)
+        out = self.dr(out)
+        out = self.fc2(out)
+        out = self.dr(out)
+        out = self.fc3(out)
         return out
 class LSTMModel:
     """
     Класс для работы с обученной LSTM-моделью
     """
-    def __init__(self,NUM_LAYERS=10, INPUT_SIZE=1080, NUM_TICKERS=120):
-        self.__NUM_LAYERS=NUM_LAYERS
-        self.__INPUT_SIZE=INPUT_SIZE
-        self.__NUM_TICKERS=NUM_TICKERS
-        self.__HIDDEN_SIZE=100
+    def __init__(self,
+                 NUM_LAYERS=10,
+                 INPUT_SIZE=1080,
+                 NUM_TICKERS=120):
+        self.__NUM_LAYERS = NUM_LAYERS
+        self.__INPUT_SIZE = INPUT_SIZE
+        self.__NUM_TICKERS = NUM_TICKERS
+        self.__HIDDEN_SIZE = 100
         pass
 
     def predict(self,
                 X: np.ndarray) -> np.ndarray:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = MYLSTM(
-            output_dim=self.__NUM_TICKERS,
-            input_dim=self.__INPUT_SIZE,
-            hidden_dim=self.__HIDDEN_SIZE,
-            layer_dim=self.__NUM_LAYERS
+            output_dim = self.__NUM_TICKERS,
+            input_dim = self.__INPUT_SIZE,
+            hidden_dim = self.__HIDDEN_SIZE,
+            layer_dim = self.__NUM_LAYERS
             ).to(device)
         model.load_state_dict(
-            torch.load("src/learning_lib/models/param_model.pth", weights_only=True, map_location=device)
+            torch.load("src/learning_lib/models/param_model.pth",
+                       weights_only=True,
+                       map_location=device)
             )
         model.eval()
         return model(
@@ -127,7 +131,8 @@ class LSTMModel:
             output_dim=NUM_CLASSES,
             input_dim=INPUT_SIZE,
             hidden_dim=HIDDEN_SIZE,
-            layer_dim=NUM_LAYERS).to(device)
+            layer_dim=NUM_LAYERS
+            ).to(device)
         EPOCHS = 2500
         LEARNING_RATE = 0.0001
         CRITERION = CustomLoss2().to(device)
