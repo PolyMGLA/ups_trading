@@ -8,19 +8,18 @@ from colorama import Fore, Back, Style
 from learning_lib.parsers.findata_parsers.binance_realtime import BinanceRealtimeParser, concat
 from learning_lib.parsers.news_parsers.coindesk_realtime import CoinDeskRealTimeParser
 from learning_lib.models.lstm import LSTMModel
-from learning_lib.models.nlp import NLPModel
+from learning_lib.models.nlp import NLPModel, RegressionHead
 from learning_lib.models.merge_predictions import PredictionMerger
 from learning_lib.utils.strategy_update import StrategyUpdater
 from server import Server
-import numpy as np
-import torch as pt
 import pandas as pd
+import numpy as np
 
 import warnings
 warnings.filterwarnings("ignore")
 
 IMPORT_FINDATA = False
-IMPORT_NEWSDATA = True
+IMPORT_NEWSDATA = False
 
 #TODO: 
 # Инициализация парсеров done
@@ -31,7 +30,12 @@ IMPORT_NEWSDATA = True
 binance_parser = BinanceRealtimeParser()
 coin_parser = CoinDeskRealTimeParser()
 lstm_model = LSTMModel()
-nlp_model = NLPModel()
+nlp_model = NLPModel(
+    model_path="src/learning_lib/models/NLPmodels/NLP_model.pth",
+    tokenizer_path="src/learning_lib/models/NLPmodels/tokenizer",
+    valid_tickers_list_path="src/learning_lib/models/NLPassets/tokens_names.txt",
+    tickers_order_path="src/learning_lib/models/NLPassets/tokens_order.txt"
+)
 merger = PredictionMerger()
 updater = StrategyUpdater()
 server = Server()
@@ -71,15 +75,24 @@ if __name__ == "__main__":
     binance_parser.start()
 
     time.sleep(1)
+    сpred = np.array([.0 for i in range(120)], dtype=np.float32)
 
     while True:
-        if not binance_parser.done:
+        x = False
+        if coin_parser.done:
+            x = True
+            data = list(map(lambda x: x[2], list(coin_parser.fetch().values())))[0]
+            cpred = nlp_model.predict(data)
+            print(cpred)
+            # ждем следующей свечи
+        if binance_parser.done:
+            x = True
+            d = concat(binance_parser.fetch(), tick)
+            findata = pd.concat([findata, d])
+            findata = findata.iloc[1:]
+            #print(findata)
+            pred = lstm_model.predict(findata)
+            print(pred)
+            merged = merger.merge(pred, cpred)
+        if not x:
             time.sleep(1)
-            continue
-        d = concat(binance_parser.fetch(), tick)
-        findata = pd.concat([findata, d])
-        findata = findata.iloc[1:]
-        print(findata)
-        pred = lstm_model.predict(findata)
-        print(pred)
-        # ждем следующей свечи
