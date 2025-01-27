@@ -9,7 +9,6 @@ class CustomLoss2(nn.Module):
         super(CustomLoss2, self).__init__()
 
     def forward(self, input, target):
-        # Compute the loss
 
         alpha = normalize_tensor(neutralize_tensor(input))
         return -(torch.mul(alpha, target).sum())/torch.sum(torch.mul(alpha, target),1).std()#*((input-target).abs().mean()**(-1))
@@ -42,11 +41,11 @@ def train_pipeline(epochs: int, criterion, optimizer, model, epochs_period: int,
     metr_best = 1000000000
     for epoch in range(epochs):
         model.train()
-        outputs = model.forward(X_train_tensors_final) #forward pass
-        optimizer.zero_grad() #caluclate the gradient, manually setting to 0
+        outputs = model.forward(X_train_tensors_final)
+        optimizer.zero_grad() 
         loss = criterion(outputs, Y_train_tensors_final)
-        loss.backward() #calculates the loss of the loss function
-        optimizer.step() #improve from loss, i.e backprop
+        loss.backward()
+        optimizer.step() 
 
         if epoch % epochs_period == 0:
             model.eval()
@@ -70,16 +69,14 @@ class MYLSTM(nn.Module):
         self.fc3=nn.Linear(128,output_dim)
 
     def forward(self, x, h0=None, c0=None):
-        # If hidden and cell states are not provided, initialize them as zeros
         if h0 is None or c0 is None:
             h0 = torch.zeros(self.layer_dim, x.size(0), self.hidden_dim).to(x.device)
             c0 = torch.zeros(self.layer_dim, x.size(0), self.hidden_dim).to(x.device)
         
-        # Forward pass through LSTM
         out, (hn, cn) = self.lstm(x, (h0, c0))
         out=out[:, -1, :]
         out=self.dr(out)
-        out = self.fc(out)  # Selecting the last output
+        out = self.fc(out)
         out=self.dr(out)
         out=self.fc2(out)
         out=self.dr(out)
@@ -104,7 +101,7 @@ class LSTMModel:
             input_dim=self.__INPUT_SIZE,
             hidden_dim=self.__HIDDEN_SIZE,
             layer_dim=self.__NUM_LAYERS
-            ).to(device) #our lstm class
+            ).to(device)
         model.load_state_dict(
             torch.load("src/learning_lib/models/param_model.pth", weights_only=True, map_location=device)
             )
@@ -130,9 +127,9 @@ class LSTMModel:
             output_dim=NUM_CLASSES,
             input_dim=INPUT_SIZE,
             hidden_dim=HIDDEN_SIZE,
-            layer_dim=NUM_LAYERS).to(device) #our lstm class
-        EPOCHS = 2500 #1000 epochs
-        LEARNING_RATE = 0.0001 #0.001 lr
+            layer_dim=NUM_LAYERS).to(device)
+        EPOCHS = 2500
+        LEARNING_RATE = 0.0001
         CRITERION = CustomLoss2().to(device)
         OPTIMIZER = torch.optim.Adam(MODEL.parameters(), lr=LEARNING_RATE)
 
