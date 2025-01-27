@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     time.sleep(1)
     сpred = np.array([.0 for i in range(120)], dtype=np.float32)
-
+    merged = np.array([.0 for i in range(120)], dtype=np.float32)
     while True:
         x = False
         if coin_parser.done:
@@ -86,7 +86,11 @@ if __name__ == "__main__":
             print(cpred)
         if binance_parser.done:
             x = True
-            d = concat(binance_parser.fetch(), tick)
+            data = binance_parser.fetch()
+            d = concat(data, tick)
+            print(d.info())
+            print([t + "_close" for t in tick])
+            updater.update(merged, d.loc[["index"] + [t + "_close" for t in tick]].to_numpy())
             findata = pd.concat([findata, d])
             findata = findata.iloc[1:]
             pred = lstm_model.predict(findata)

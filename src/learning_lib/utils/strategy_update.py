@@ -18,6 +18,8 @@ class StrategyUpdater:
     def update(self,
                alpha: np.ndarray,
                returns: np.ndarray) -> None:
+        print(alpha)
+        print(returns)
         alpha = self.to_pd(alpha)
         returns = self.to_pd(returns)
         with open(f"{self.folder_path}/metrics.json", "w") as f:
