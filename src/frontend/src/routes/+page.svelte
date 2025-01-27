@@ -174,23 +174,23 @@
                     <h1 class="text-xl">Метрики</h1>
                     <div class="flex flex-col min-w-full gap-2">
                         <div class="flex flex-row justify-between">
-                            <p>PnL:</p>
+                            <p>Доход: </p>
                             <div class="bg-teal-600 px-2 rounded-lg"><p>{ metrics?.pnl ?? '?' }</p></div>
                         </div>
                         <div class="flex flex-row justify-between">
-                            <p>Sharp:</p>
+                            <p>Стабильность:</p>
                             <div class="bg-teal-600 px-2 rounded-lg"><p>{ metrics?.sharp ?? '?' }</p></div>
                         </div>
                         <div class="flex flex-row justify-between">
-                            <p>Profit margin:</p>
+                            <p>Эффектинвость использования капитала:</p>
                             <div class="bg-teal-600 px-2 rounded-lg"><p>{ metrics?.profit_margin ?? '?' }</p></div>
                         </div>
                         <div class="flex flex-row justify-between">
-                            <p>Max Drawdown:</p>
+                            <p>Максимальная просадка:</p>
                             <div class="bg-teal-600 px-2 rounded-lg"><p>{ metrics?.max_drawdown ?? '?' }</p></div>
                         </div>
                         <div class="flex flex-row justify-between">
-                            <p>Turnover:</p>
+                            <p>Активность торговли:</p>
                             <div class="bg-teal-600 px-2 rounded-lg"><p>{ metrics?.turnover ?? '?' }</p></div>
                         </div>
                     </div>
