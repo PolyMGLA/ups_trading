@@ -18,8 +18,8 @@ class StrategyUpdater:
     def update(self,
                alpha: np.ndarray,
                returns: np.ndarray) -> None:
-        print(alpha)
-        print(returns)
+        print("alpha =", alpha.shape)
+        print("returns =", returns.shape)
         alpha = self.to_pd(alpha)
         returns = self.to_pd(returns)
         print(FinCalculations.metrics_dict(alpha, returns))
