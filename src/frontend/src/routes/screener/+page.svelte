@@ -3,7 +3,7 @@
     let minAmountTo = "";
   
     function filterStrategies() {
-      alert(`Фильтр будет применен с параметрами: от ${minAmountFrom || 0} до ${minAmountTo || "3 000 000"}`);
+      alert(`Фильтр будет применен с параметрами: от ${minAmountFrom || 0} до ${minAmountTo || "100"}`);
       window.location.href = '/';
     }
   </script>
@@ -119,27 +119,27 @@
   <main>
     <section class="filters">
       <div class="filter-group">
-        <span>Минимальная сумма, $</span>
+        <span>Вложение, $</span>
         <input
           type="number"
-          placeholder="от 0"
+          placeholder="Сумма"
           class="filter-input"
           bind:value={minAmountFrom}
-        />
-        <input
-          type="number"
-          placeholder="до 10.000.000"
-          class="filter-input"
-          bind:value={minAmountTo}
         />
       </div>
       <div class="filter-group">
-        <span>Ёмкость (вложенные средства других инвесторов), $</span>
+        <span>Максимальная просадка, %</span>
         <input
           type="number"
           placeholder="от 0"
           class="filter-input"
           bind:value={minAmountFrom}
+        />
+        <input
+          type="number"
+          placeholder="до 100"
+          class="filter-input"
+          bind:value={minAmountTo}
         />
       </div>
       <button class="filter-button" on:click={filterStrategies}>Подобрать</button>
