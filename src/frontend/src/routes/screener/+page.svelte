@@ -116,7 +116,7 @@
   <main>
     <section class="filters">
       <div class="filter-group">
-        <span>Минимальная сумма, ₽</span>
+        <span>Минимальная сумма, $</span>
         <input
           type="number"
           placeholder="от 0"
@@ -125,9 +125,18 @@
         />
         <input
           type="number"
-          placeholder="до 3 000 000"
+          placeholder="до 10.000.000"
           class="filter-input"
           bind:value={minAmountTo}
+        />
+      </div>
+      <div class="filter-group">
+        <span>Ёмкость (вложенные средства других инвесторов), $</span>
+        <input
+          type="number"
+          placeholder="от 0"
+          class="filter-input"
+          bind:value={minAmountFrom}
         />
         <button class="filter-button" on:click={filterStrategies}>Подобрать</button>
       </div>
