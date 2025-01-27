@@ -84,15 +84,14 @@ if __name__ == "__main__":
             data = list(map(lambda x: x[2], list(coin_parser.fetch().values())))[0]
             cpred = nlp_model.predict(data)
             print(cpred)
-            # ждем следующей свечи
         if binance_parser.done:
             x = True
             d = concat(binance_parser.fetch(), tick)
             findata = pd.concat([findata, d])
             findata = findata.iloc[1:]
-            #print(findata)
             pred = lstm_model.predict(findata)
             print(pred)
             merged = merger.merge(pred, cpred)
+            print(merged)
         if not x:
             time.sleep(1)
