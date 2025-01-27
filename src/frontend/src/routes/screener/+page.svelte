@@ -141,8 +141,8 @@
           class="filter-input"
           bind:value={minAmountFrom}
         />
-        <button class="filter-button" on:click={filterStrategies}>Подобрать</button>
       </div>
+      <button class="filter-button" on:click={filterStrategies}>Подобрать</button>
     </section>
   
     <section class="strategy-cards">
