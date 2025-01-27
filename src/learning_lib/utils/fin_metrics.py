@@ -184,7 +184,7 @@ class FinCalculations:
         '''
         metrics_dict = {}
         metrics_dict["pnl"] = str(FinCalculations.pnl(alpha, returns))
-        metrics_dict["sharpe"] = str(FinCalculations.sharpe(alpha, returns))
+        metrics_dict["sharp"] = str(FinCalculations.sharpe(alpha, returns))
         metrics_dict["profit_margin"] = str(FinCalculations.profit_margin(alpha, returns))
         metrics_dict["max_drawdown"] = str(FinCalculations.maxDrawdown(alpha, returns))
         metrics_dict["turnover"] = str(FinCalculations.turnover(alpha))

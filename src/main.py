@@ -88,14 +88,29 @@ if __name__ == "__main__":
             x = True
             data = binance_parser.fetch()
             d = concat(data, tick)
-            print(d.info())
-            print([t + "_close" for t in tick])
-            updater.update(merged, d.loc[["index"] + [t + "_close" for t in tick]].to_numpy())
+            #print(d.info())
+            #print([t + "_close" for t in tick])
+            df = pd.DataFrame(columns=[t + "_close" for t in tick])
+            for t in tick:
+                df[t + "_close"] = d[t + "_close"]
+            updater.update(merged, df.to_numpy()[0])
             findata = pd.concat([findata, d])
             findata = findata.iloc[1:]
             pred = lstm_model.predict(findata)
-            print(pred)
+            #print(pred)
             merged = merger.merge(pred, cpred)
             print(merged)
         if not x:
             time.sleep(1)
+
+"""
+{
+    "data": {
+        "pnl": "$21",
+        "sharp": "1.4",
+        "profit_margin": "18.0",
+        "max_drawdown": "10%",
+        "turnover": "6.0"
+    }
+}
+"""

@@ -22,6 +22,7 @@ class StrategyUpdater:
         print(returns)
         alpha = self.to_pd(alpha)
         returns = self.to_pd(returns)
+        print(FinCalculations.metrics_dict(alpha, returns))
         with open(f"{self.folder_path}/metrics.json", "w") as f:
             json.dump(
                 FinCalculations.metrics_dict(alpha, returns),

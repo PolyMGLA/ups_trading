@@ -6,6 +6,20 @@ import torch
 import torch.nn as nn
 from transformers import AutoTokenizer
 
+def neutralize(alpha):
+    return alpha.sub(
+        alpha.mean(axis=1),
+        axis=0
+    )
+
+def scale(alpha):
+    return alpha.div(
+        alpha
+        .abs()
+        .sum(axis=1),
+        axis=0
+    )
+
 class RegressionHead(nn.Module):
     def __init__(self, config):
         super().__init__()
