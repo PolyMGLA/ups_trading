@@ -1,9 +1,9 @@
 {
     "data": {
-        "pnl": "0",
-        "sharp": "nan",
-        "profit_margin": "nan",
-        "max_drawdown": "0.0",
-        "turnover": "0.0"
+        "pnl": "0.004106387213142251",
+        "sharp": "5.782591080732988",
+        "profit_margin": "5.045323853762861e-05",
+        "max_drawdown": "0.004726949677314593",
+        "turnover": "0.678249690896066"
     }
 }
