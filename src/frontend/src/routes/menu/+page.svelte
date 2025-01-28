@@ -6,19 +6,11 @@
   }
 
   function goToStrategy() {
-    goto('/routes/+page.svelte');
+    goto('/');
   }
 </script>
 
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #30313A;
-    color: #FFFFFF;
-    margin: 0;
-    padding: 0;
-  }
-
   .header {
     display: flex;
     justify-content: space-between;

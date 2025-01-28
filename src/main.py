@@ -80,7 +80,7 @@ if __name__ == "__main__":
     time.sleep(1)
     сpred = np.array([.0 for i in range(120)], dtype=np.float32)
     merged = np.zeros((1, 120), dtype=np.float32)
-    df = pd.DataFrame([[.0 for i in range(120)]], columns=[t + "_close" for t in tick])
+    df = pd.DataFrame([[1/120 for i in range(120)]], columns=[t + "_close" for t in tick])
     d2 = pd.DataFrame([[1.0 for i in range(1080)]], columns=[t + "_" + col for col in cols for t in tick], dtype=np.float32)
     i = 0
     while True:
@@ -105,7 +105,7 @@ if __name__ == "__main__":
             print("d2 =", d2.shape)
             #print("#" * 100)
             print("df =", df.shape)
-            df = pd.Series([(d[t + "_close"] / d2[t + "_close"])[0] for t in tick])
+            df.iloc[i] = pd.Series([(d[t + "_close"] / d2[t + "_close"])[0] for t in tick])
             # print([d[t + "_close"][0] / d2[t + "_close"][0] for t in tick])
             # print(df)
             i += 1

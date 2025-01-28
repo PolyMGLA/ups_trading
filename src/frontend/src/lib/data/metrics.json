@@ -1,9 +1,9 @@
 {
     "data": {
-        "pnl": "-0.0",
-        "sharp": "-3.68",
-        "profit_margin": "-0.0",
-        "max_drawdown": "0.01",
-        "turnover": "1.0"
+        "pnl": "+$21",
+        "sharp": "1.4",
+        "profit_margin": "8",
+        "max_drawdown": "-10%",
+        "turnover": "1.3"
     }
 }
