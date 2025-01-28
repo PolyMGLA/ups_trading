@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 COEF = 0.99
-ALP = 1.0
+ALP = 0.9
 
 def neutralize(alpha):
     return alpha.sub(

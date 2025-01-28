@@ -65,8 +65,8 @@ if __name__ == "__main__":
 
     try:
         findata = concat(binance_parser.request(None), tick)
-        # findata.to_csv("findata.csv")
-        # findata = pd.read_csv("findata.csv", index_col="ind")
+        findata.to_csv("findata.csv", index_label="ind")
+        findata = pd.read_csv("findata.csv", index_col="ind")
         print("findata =", findata.shape)
     except Exception as e:
         print(f"parsing last {num} candles..", Fore.RED + "error")
@@ -95,7 +95,9 @@ if __name__ == "__main__":
             x = True
             data = binance_parser.fetch()
             d = concat(data, tick)
-            # d.to_csv("data.csv")
+            d.to_csv("data.csv")
+            # print(d)
+            # print(d2)
             #print(d.info())
             #print([t + "_close" for t in tick])
             #print("#" * 100)
@@ -108,7 +110,7 @@ if __name__ == "__main__":
             # print(df)
             i += 1
             # print(df.columns)
-            updater.update(merged, df.to_numpy())
+            updater.update(merged, df.to_numpy(), tick)
             d2 = concat(data, tick)
             findata = pd.concat([findata, d])
             findata = findata.iloc[1:]
