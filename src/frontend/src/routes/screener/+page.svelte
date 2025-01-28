@@ -58,7 +58,16 @@
       flex-direction: column;
     }
   
-    .filter-input {
+    .filter-input1 {
+      margin-top: 5px;
+      padding: 5px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #121212;
+    }
+
+    .filter-input2 {
       margin-top: 5px;
       padding: 5px;
       border: none;
@@ -123,7 +132,7 @@
         <input
           type="number"
           placeholder="Сумма"
-          class="filter-input"
+          class="filter-input1"
           bind:value={minAmountFrom}
         />
       </div>
@@ -131,14 +140,8 @@
         <span>Максимальная просадка, %</span>
         <input
           type="number"
-          placeholder="от 0"
-          class="filter-input"
-          bind:value={minAmountFrom}
-        />
-        <input
-          type="number"
           placeholder="до 100"
-          class="filter-input"
+          class="filter-input2"
           bind:value={minAmountTo}
         />
       </div>
@@ -148,16 +151,16 @@
     <section class="strategy-cards">
       <div class="strategy-card">
         <h3>Anti-mainstream 1</h3>
-        <p>Подписчики: 88</p>
+        <p>Подписчики: 25</p>
         <p>Минимальная сумма: $500</p>
-        <p>Среднегодовая доходность: 96%</p>
+        <p>Среднегодовая доходность: 22.5%</p>
         <p>Прогнозируемая просадка: -15%</p>
       </div>
       <div class="strategy-card">
         <h3>Anti-mainstream 2</h3>
-        <p>Подписчики: 52</p>
+        <p>Подписчики: 12</p>
         <p>Минимальная сумма: $100</p>
-        <p>Среднегодовая доходность: 66%</p>
+        <p>Среднегодовая доходность: 20.3%</p>
         <p>Прогнозируемая просадка: -10%</p>
       </div>
     </section>
