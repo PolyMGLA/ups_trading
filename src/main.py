@@ -64,9 +64,9 @@ if __name__ == "__main__":
     num = 10
 
     try:
-        # findata = concat(binance_parser.request(None), tick)
+        findata = concat(binance_parser.request(None), tick)
         # findata.to_csv("findata.csv")
-        findata = pd.read_csv("findata.csv", index_col="ind")
+        # findata = pd.read_csv("findata.csv", index_col="ind")
         print("findata =", findata.shape)
     except Exception as e:
         print(f"parsing last {num} candles..", Fore.RED + "error")
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     time.sleep(1)
     сpred = np.array([.0 for i in range(120)], dtype=np.float32)
     merged = np.zeros((1, 120), dtype=np.float32)
-    df = pd.DataFrame(columns=[t + "_close" for t in tick])
+    df = pd.DataFrame([[.0 for i in range(120)]], columns=[t + "_close" for t in tick])
     d2 = pd.DataFrame([[1.0 for i in range(1080)]], columns=[t + "_" + col for col in cols for t in tick], dtype=np.float32)
     i = 0
     while True:
@@ -95,7 +95,7 @@ if __name__ == "__main__":
             x = True
             data = binance_parser.fetch()
             d = concat(data, tick)
-            d.to_csv("data.csv")
+            # d.to_csv("data.csv")
             #print(d.info())
             #print([t + "_close" for t in tick])
             #print("#" * 100)
@@ -103,7 +103,9 @@ if __name__ == "__main__":
             print("d2 =", d2.shape)
             #print("#" * 100)
             print("df =", df.shape)
-            df.loc[i] = pd.Series([d[t + "_close"][0] / d2[t + "_close"][0] for t in tick])
+            df = pd.Series([(d[t + "_close"] / d2[t + "_close"])[0] for t in tick])
+            # print([d[t + "_close"][0] / d2[t + "_close"][0] for t in tick])
+            # print(df)
             i += 1
             # print(df.columns)
             updater.update(merged, df.to_numpy())

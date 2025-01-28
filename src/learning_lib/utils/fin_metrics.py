@@ -183,9 +183,9 @@ class FinCalculations:
         :return: Датафрейм с рассчитанными метриками.
         '''
         metrics_dict = {}
-        metrics_dict["pnl"] = str(FinCalculations.pnl(alpha, returns))
-        metrics_dict["sharp"] = str(FinCalculations.sharpe(alpha, returns))
-        metrics_dict["profit_margin"] = str(FinCalculations.profit_margin(alpha, returns))
-        metrics_dict["max_drawdown"] = str(FinCalculations.maxDrawdown(alpha, returns))
-        metrics_dict["turnover"] = str(FinCalculations.turnover(alpha))
+        metrics_dict["pnl"] = str(round(FinCalculations.pnl(alpha, returns), 2))
+        metrics_dict["sharp"] = str(round(FinCalculations.sharpe(alpha, returns), 2))
+        metrics_dict["profit_margin"] = str(round(FinCalculations.profit_margin(alpha, returns), 2))
+        metrics_dict["max_drawdown"] = str(round(FinCalculations.maxDrawdown(alpha, returns), 2))
+        metrics_dict["turnover"] = str(round(FinCalculations.turnover(alpha), 2))
         return { "data": metrics_dict }
