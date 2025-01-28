@@ -109,12 +109,13 @@
                     aspectRatio: 2,
                     plugins: {
                         legend: {
-                            position: 'right',
+                            /*position: 'right',
                             labels: {
                                 color: 'rgb(255, 255, 255)',
                                 boxHeight: 15,
                                 padding: 15
-                            }
+                            }*/
+                            display: false
                         }
                     },
                     layout: {
