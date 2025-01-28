@@ -1,6 +1,12 @@
 <script>
+  import { goto } from '$app/navigation';
+
   function goBack() {
     window.location.href = '/';
+  }
+
+  function goToStrategy() {
+    goto('/routes/+page.svelte');
   }
 </script>
 
@@ -19,6 +25,7 @@
     align-items: center;
     padding: 20px;
     background-color: #30313A;
+    color: white;
   }
 
   .back-button {
@@ -37,6 +44,7 @@
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
     padding: 20px;
+    background-color: #30313A;
   }
 
   .strategy-card {
@@ -46,11 +54,23 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     border: 1px solid #b1f5ec;
     color: white;
+    cursor: pointer;
+  }
+
+  .strategy-card:hover {
+    background-color: #2A2A2A;
   }
 
   .strategy-card h3 {
     color: #b1f5ec;
     margin-bottom: 10px;
+    background-color: #30313A;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .h2 {
+    color: white;
   }
 
   .footer {
@@ -69,7 +89,7 @@
 
 <main>
   <section class="strategy-cards">
-    <div class="strategy-card">
+    <div class="strategy-card" on:click={goToStrategy}>
       <h3>RostOK</h3>
       <p>Подписчики: 50</p>
       <p>Минимальная сумма: $300</p>
