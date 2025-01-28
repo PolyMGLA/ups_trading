@@ -107,6 +107,11 @@
                 options: {
                     responsive: true,
                     aspectRatio: 2,
+                    elements: {
+                        arc: {
+                            borderWidth: 0
+                        }
+                    },
                     plugins: {
                         legend: {
                             /*position: 'right',
