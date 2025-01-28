@@ -36,11 +36,11 @@ class StrategyUpdater:
         self.pnl.append(round(FinCalculations.pnl(alpha, returns), 2))
         with open(f"{self.folder_path}/income.json", "w") as f:
             json.dump(
-                [list(range(len(self.pnl))), self.pnl],
+                {"labels": list(range(len(self.pnl))), "values": self.pnl},
                 f, indent=4
             )
         with open(f"{self.folder_path}/allocation.json", "w") as f:
             json.dump(
-                [tick, list(map(abs, aa[-1]))],
+                {"labels": tick, "values": list(map(lambda x : str(abs(x)), aa[-1]))},
                 f, indent=4
             )
