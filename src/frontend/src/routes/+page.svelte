@@ -182,7 +182,7 @@
                             <div class="bg-teal-600 px-2 rounded-lg"><p>{ metrics?.sharp ?? '?' }</p></div>
                         </div>
                         <div class="flex flex-row justify-between">
-                            <p>Эффектинвость использования капитала:</p>
+                            <p>Эффективность использования капитала:</p>
                             <div class="bg-teal-600 px-2 rounded-lg"><p>{ metrics?.profit_margin ?? '?' }</p></div>
                         </div>
                         <div class="flex flex-row justify-between">
