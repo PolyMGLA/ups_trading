@@ -19,6 +19,7 @@
       align-items: center;
       padding: 20px;
       background-color: #30313A;
+      color: white;
     }
   
     .back-button {
@@ -37,6 +38,7 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 20px;
       padding: 20px;
+      background-color: #30313A;
     }
   
     .strategy-card {
@@ -51,6 +53,11 @@
     .strategy-card h3 {
       color: #b1f5ec;
       margin-bottom: 10px;
+      background-color: #30313A;
+    }
+
+    .h2 {
+        color: white;
     }
   
     .footer {
