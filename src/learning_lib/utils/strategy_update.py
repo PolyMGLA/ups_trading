@@ -33,7 +33,7 @@ class StrategyUpdater:
                 FinCalculations.metrics_dict(alpha, returns),
                 f, indent=4)
         self.pnl = self.pnl[-10:]
-        self.pnl.append(round(FinCalculations.pnl(alpha, returns), 2))
+        self.pnl.append(FinCalculations.pnl(alpha, returns) * 100)
         with open(f"{self.folder_path}/income.json", "w") as f:
             json.dump(
                 {"labels": list(range(len(self.pnl))), "values": self.pnl},

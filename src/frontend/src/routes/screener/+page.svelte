@@ -4,7 +4,7 @@
   
     function filterStrategies() {
       alert(`Фильтр будет применен с параметрами: от ${minAmountFrom || 0} до ${minAmountTo || "100"}`);
-      window.location.href = '/';
+      window.location.href = '/menu';
     }
   </script>
   
