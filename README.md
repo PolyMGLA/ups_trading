@@ -32,4 +32,25 @@
    ```bash
    pip install -r requirements.txt
    ```
-3. Настройте необходимые API-ключи и конфигурационные файлы для источников данных и новостей в файле ```config.yaml```.
+3. Настройте необходимые API-ключи и конфигурационные файлы для источников данных и новостей в файле ```.env```.
+4. Установите Node.js:
+    ```bash
+    sudo pacman -S pnpm
+
+    cd src/frontend
+    pnpm install
+    ```
+
+#### Авторы
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/1VictorS1"><img src="https://avatars.githubusercontent.com/u/78421686?v=4" width="100px;" alt=""/><br/><sub><b>1VictorS1</b></sub></a><br/></td>
+    <td align="center"><a href="https://github.com/mr-Lime197"><img src="https://avatars.githubusercontent.com/u/148991262?v=4" width="100px;" alt=""/><br/><sub><b>mr-Lime197</b></sub></a><br/></td>
+    <td align="center"><a href="https://github.com/KTOTO9567578347"><img src="https://avatars.githubusercontent.com/u/60059772?v=4" width="100px;" alt=""/><br/><sub><b> KTOTO9567578347</b></sub></a><br/></td>
+    <td align="center"><a href="https://github.com/Morr66"><img src="https://avatars.githubusercontent.com/u/165126978?v=4" width="100px;" alt=""/><br/><sub><b>Morr66</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/PolyMGLA"><img src="https://avatars.githubusercontent.com/u/128220238?v=4" width="100px;" alt=""/><br/><sub><b>PolyMGLA</b></sub></a><br/></td>
+    <td align="center"><a href="https://github.com/seri4ka"><img src="https://avatars.githubusercontent.com/u/108091186?v=4" width="100px;" alt=""/><br/><sub><b>seri4ka</b></sub></a><br/>Вождь</td>
+    <td align="center"><a href="https://github.com/vADALVv"><img src="https://avatars.githubusercontent.com/u/153617508?v=4" width="100px;" alt=""/><br/><sub><b>vADALVv</b></sub></a><br/>Вождь</td>
+  </tr>
+</table>

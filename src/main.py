@@ -5,7 +5,7 @@ from colorama import init
 init()
 from colorama import Fore, Back, Style
 
-from learning_lib.parsers.findata_parsers.binance_realtime import BinanceRealtimeParser, concat
+from learning_lib.parsers.findata_parsers.binance.realtime import BinanceRealtimeParser, concat
 from learning_lib.parsers.news_parsers.coindesk_realtime import CoinDeskRealTimeParser
 from learning_lib.models.lstm import LSTMModel
 from learning_lib.models.nlp import NLPModel, RegressionHead
@@ -96,26 +96,16 @@ if __name__ == "__main__":
             data = binance_parser.fetch()
             d = concat(data, tick)
             d.to_csv("data.csv")
-            # print(d)
-            # print(d2)
-            #print(d.info())
-            #print([t + "_close" for t in tick])
-            #print("#" * 100)
             print("d =", d.shape)
             print("d2 =", d2.shape)
-            #print("#" * 100)
             print("df =", df.shape)
             df.iloc[i] = pd.Series([(d[t + "_close"] / d2[t + "_close"])[0] for t in tick])
-            # print([d[t + "_close"][0] / d2[t + "_close"][0] for t in tick])
-            # print(df)
             i += 1
-            # print(df.columns)
             updater.update(merged, df.to_numpy(), tick)
             d2 = concat(data, tick)
             findata = pd.concat([findata, d])
             findata = findata.iloc[1:]
             pred = lstm_model.predict(findata)
-            #print(pred)
             merged = np.append(merged, merger.merge(pred, cpred), axis=0)
             print("merged =", merged.shape)
         if not x:
